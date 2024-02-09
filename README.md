@@ -1,2 +1,2 @@
-# KV6002-Project
+# KV6002-Northumbria
 Event Management Team Project
