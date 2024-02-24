@@ -58,7 +58,7 @@ function Events() {
                                 {category.CategoryName}
                             </option>
                         ))}
-                        placeholder="Select Category"
+                        placeholder="All Events"
                         selectType={selectedCategory}
                         handleSelectType={handleSelectCategory}
                     />
