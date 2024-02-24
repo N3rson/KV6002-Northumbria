@@ -6,11 +6,12 @@ import Bookings from './pages/Bookings'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 
+
 function App() {
 
 
   return (
-    <div className='bg-steelBlue text-white p-5 text-lg'>
+    <div className='bg-blue-200 text-black p-5 text-lg min-h-screen'>
         <Navbar />
         <Routes>
           <Route path = "/" element={<Home />} />
