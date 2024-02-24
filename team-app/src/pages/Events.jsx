@@ -21,27 +21,25 @@ function Events() {
 
     return (
       <div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <h1 className='font-bold'>Events</h1>
-          <div>
-            <ul className='border-b-2 border-t-2 border-black m-10 flex justify-center'>
-                {events.map(event => (
-                    <li key={event.EventID}>
-                        <h2 className='ml-8 font-bold'>{event.EventName}</h2>
-                        <p className='ml-16'>{event.EventCategory}</p>
-                        <p className='ml-12'>{event.EventDate}</p>
-                        <p className='ml-12'>{event.EventAttendance} Attending</p>
-                        <p>{event.EventLocation}</p>
-                    </li>
-                ))}
-              </ul>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <h1 className='font-bold'>Events</h1>
+              <div>
+                  {events.map(event => (
+                      <div key={event.EventID} className='border-b-2 border-t-2 border-black m-10'>
+                          <h2 className='flex justify-center font-bold'>{event.EventName}</h2>
+                          <p className='flex justify-center'>{event.EventCategory}</p>
+                          <p className='flex justify-center'>{event.EventDate}</p>
+                          <p className='flex justify-center'>{event.EventAttendance} Attending</p>
+                          <p className='flex justify-center'>{event.EventLocation}</p>
+                      </div>
+                  ))}
+              </div>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
                 Book
               </button>
-            </div>
-        </div>
+          </div>
       </div>
-    )
+  )
 }
 
 export default Events
