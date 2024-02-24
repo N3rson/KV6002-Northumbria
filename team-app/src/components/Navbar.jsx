@@ -11,7 +11,7 @@ function Navbar() {
   const currentPath = location.pathname
 
   const linkClass = "text-white"
-  const activeClass = "scale-125"
+  const activeClass = "scale-150"
   
 
   return (
