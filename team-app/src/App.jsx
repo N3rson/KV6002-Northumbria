@@ -10,7 +10,7 @@ function App() {
 
 
   return (
-    <div>
+    <div className='bg-steelBlue text-white p-5 text-lg'>
         <Navbar />
         <Routes>
           <Route path = "/" element={<Home />} />
