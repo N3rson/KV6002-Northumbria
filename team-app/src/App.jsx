@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Events from './pages/Events'
 import Calendar from './pages/Calendar'
 import Bookings from './pages/Bookings'
+import NotFound from './pages/NotFound'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 
@@ -18,6 +19,7 @@ function App() {
           <Route path = "/events" element={<Events />} />
           <Route path = "/calendar" element={<Calendar />} />
           <Route path = "/bookings" element={<Bookings />} />
+          <Route path = "*" element={<NotFound/>} />
         </Routes>
     </div>
   )
