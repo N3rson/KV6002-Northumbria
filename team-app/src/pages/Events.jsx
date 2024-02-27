@@ -14,7 +14,10 @@ function Events() {
             try {
                 const eventsCollection = collection(firestore, 'Events')
                 const eventsSnapshot = await getDocs(eventsCollection)
-                const eventsData = eventsSnapshot.docs.map(doc => doc.data())
+                const eventsData = eventsSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }))
                 setEvents(eventsData)
             } catch (error) {
                 console.error('Error fetching events: ', error)

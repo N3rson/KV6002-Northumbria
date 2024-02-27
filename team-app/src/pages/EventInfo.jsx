@@ -1,6 +1,34 @@
-function EventInfo(props) {
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { collection, doc, getDoc } from 'firebase/firestore';
+import { firestore } from '../firebaseConfig';
 
+function EventInfo() {
 
+    const [event, setEvent] = useState(null);
+    const { eventId } = useParams();
+
+    useEffect(() => {
+        const fetchEventData = async () => {
+            try {
+                const eventRef = doc(firestore, 'Events', eventId);
+                const eventSnapshot = await getDoc(eventRef);
+                if (eventSnapshot.exists()) {
+                    setEvent(eventSnapshot.data());
+                } else {
+                    console.error('Event not found');
+                }
+            } catch (error) {
+                console.error('Error fetching event data: ', error);
+            }
+        };
+
+        fetchEventData();
+    }, [eventId]);
+
+    if (!event) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
