@@ -42,7 +42,7 @@ function Events() {
         setSelectedCategory(event.target.value)
     }
 
-    const selectedCategoryName = categories.find(category => category.CategoryID === selectedCategory)?.CategoryName;
+    const selectedCategoryName = categories.find(category => category.id === selectedCategory)?.CategoryName;
 
     const filteredEvents = selectedCategoryName ?
         events.filter(event => event.EventCategory === selectedCategoryName) : events;
@@ -54,7 +54,7 @@ function Events() {
                 <div>
                     <Select
                         options={categories.map(category => (
-                            <option key={category.id} value={category.CategoryID}>
+                            <option key={category.id} value={category.id}>
                                 {category.CategoryName}
                             </option>
                         ))}
@@ -63,7 +63,7 @@ function Events() {
                         handleSelectType={handleSelectCategory}
                     />
                     {filteredEvents.map(event => (
-                        <div key={event.EventID} className='border-b-2 border-black m-10'>
+                        <div key={event.id} className='border-b-2 border-black m-10'>
                             <h2 className='flex justify-center font-bold'>{event.EventName}</h2>
                             <p className='flex justify-center'>{event.EventCategory}</p>
                             <p className='flex justify-center'>{event.EventDate}</p>
