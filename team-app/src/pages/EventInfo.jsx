@@ -61,8 +61,10 @@ function EventInfo() {
             <p className='flex justify-center mt-10 text-sm bg-white p-6 rounded-xl'>{event.EventDescription}</p>
             <p className="h-20 w-20 bg-white rounded-full mt-10 flex items-center justify-center mr-10">{event.EventAttendance} / {event.EventLimit}</p>
         </div>
-          {!isBookButtonDisabled && <button className='bg-steelBlue rounded-lg p-2 m-10 text-white' onClick={handleBookClick}>Book</button>}
-          {isBookButtonDisabled && <button className='bg-gray-400 rounded-lg p-2 m-10 text-white cursor-not-allowed' disabled>Book</button>}
+        <div>
+          {!isBookButtonDisabled && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full" onClick={handleBookClick}>Book</button>}
+          {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded w-full' disabled>Book</button>}
+        </div>
       </div>
     )
   }

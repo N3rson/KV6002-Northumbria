@@ -68,7 +68,7 @@ function Events() {
                     />
                     {filteredEvents.map(event => (
                     <Link key={event.id} to={'/event/' + event.id}>
-                        <div key={event.id} className='bg-white rounded-xl border-black m-10'>
+                        <div key={event.id} className='bg-white rounded-xl p-4 border-black m-10 shadow-2xl'>
                             <h2 className='flex justify-center font-bold'>{event.EventName}</h2>
                             <p className='flex justify-center'>{event.EventCategory}</p>
                             <p className='flex justify-center'>{event.EventDate}</p>
