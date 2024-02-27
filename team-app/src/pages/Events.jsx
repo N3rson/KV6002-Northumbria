@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
 import Select from '../components/Select'
+import { Link } from 'react-router-dom';
 
 function Events() {
     const [events, setEvents] = useState([])
@@ -63,13 +64,15 @@ function Events() {
                         handleSelectType={handleSelectCategory}
                     />
                     {filteredEvents.map(event => (
+                    <Link key={event.id} to={`/event/${event.id}`}>
                         <div key={event.id} className='border-b-2 border-black m-10'>
                             <h2 className='flex justify-center font-bold'>{event.EventName}</h2>
                             <p className='flex justify-center'>{event.EventCategory}</p>
                             <p className='flex justify-center'>{event.EventDate}</p>
-                            <p className='flex justify-center'>{event.EventAttendance} Attending</p>
+                            <p className='flex justify-center'>{event.EventAttendance} / {event.EventLimit}</p>
                             <p className='flex justify-center'>{event.EventLocation}</p>
                         </div>
+                    </Link>
                     ))}
                 </div>
             </div>

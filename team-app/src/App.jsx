@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Home from './pages/Home'
 import Events from './pages/Events'
+import EventInfo from './pages/EventInfo'
 import Calendar from './pages/Calendar'
 import Bookings from './pages/Bookings'
 import NotFound from './pages/NotFound'
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path = "/" element={<Home />} />
           <Route path = "/events" element={<Events />} />
+          <Route path = "/event/:eventId" element={<EventInfo />} />
           <Route path = "/calendar" element={<Calendar />} />
           <Route path = "/bookings" element={<Bookings />} />
           <Route path = "*" element={<NotFound/>} />
