@@ -61,6 +61,7 @@ function EventInfo() {
                 <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black'>{event.EventName}</h1>
                 <p className='flex justify-center text-sm'>{event.EventAddress}, {event.EventLocation}</p>
                 <p className='flex justify-center text-sm'>{event.EventDate} at {event.EventTime}</p>
+                <p className='flex justify-center text-sm'>Length: {event.EventLength}</p>
                 <p className='flex justify-center mt-10 text-sm bg-white p-6 rounded-xl'>{event.EventDescription}</p>
                 <div className="flex justify-center mt-10">
                     <p className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center mr-5">
