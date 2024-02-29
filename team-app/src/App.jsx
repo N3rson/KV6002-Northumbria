@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Home from './pages/Home'
 import Events from './pages/Events'
 import EventInfo from './pages/EventInfo'
-import Calendar from './pages/Calendar'
+import MyCalendar from './pages/MyCalendar'
 import Bookings from './pages/Bookings'
 import NotFound from './pages/NotFound'
 import { Routes, Route } from 'react-router-dom'
@@ -19,7 +19,7 @@ function App() {
           <Route path = "/" element={<Home />} />
           <Route path = "/events" element={<Events />} />
           <Route path = "/event/:eventId" element={<EventInfo />} />
-          <Route path = "/calendar" element={<Calendar />} />
+          <Route path = "/calendar" element={<MyCalendar />} />
           <Route path = "/bookings" element={<Bookings />} />
           <Route path = "*" element={<NotFound/>} />
         </Routes>
