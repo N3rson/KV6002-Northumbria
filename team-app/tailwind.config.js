@@ -14,7 +14,11 @@ export default {
       },
     },
     borderRadius: {
-      'xlg': '2rem',
+      lg: '0.5rem',
+      xlg: '2rem',
+    },
+    boxShadow: {
+      middle: '0 0px 15px -3px rgb(0 0 0 / 0.2)',
     }
   },
   plugins: [],
