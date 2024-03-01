@@ -9,9 +9,13 @@ export default {
     extend: {
       colors: {
         steelBlue: '#4682B4',
-        primary: '#eb4034'
+        primary: '#e1ebfc',
+        secondary: '#fcd9d2'
       },
     },
+    borderRadius: {
+      'xlg': '2rem',
+    }
   },
   plugins: [],
 }

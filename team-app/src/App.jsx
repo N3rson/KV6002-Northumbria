@@ -13,7 +13,7 @@ function App() {
 
 
   return (
-    <div className='bg-blue-200 text-black p-5 text-lg min-h-screen'>
+    <div className='bg-gradient-to-r from-primary to-secondary text-black p-5 text-lg min-h-screen'>
         <Navbar />
         <Routes>
           <Route path = "/" element={<Home />} />
