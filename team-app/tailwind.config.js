@@ -8,7 +8,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        steelBlue: '#4682B4'
+        steelBlue: '#4682B4',
+        primary: '#eb4034'
       },
     },
   },
