@@ -25,7 +25,6 @@ function Bookings() {
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <h1>Bookings</h1>
         {bookings.map(booking => (
           <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle'>
            <h2 className='flex justify-center font-bold'>{booking.BookingDate}</h2>

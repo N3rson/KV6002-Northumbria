@@ -24,7 +24,7 @@ function App() {
     '/notifications': 'Notifications',
   }
 
-  let thisPageName = "";
+  let thisPageName = "Notifications";
   pageNames = Object.entries(pageNames)
   pageNames.map(([key, value] = page)=>{
     if(key == currentPath){
@@ -34,6 +34,7 @@ function App() {
 
   return (
     <div className='bg-gradient-to-r from-primary to-secondary text-black p-5 text-lg min-h-screen'>
+        <Topbar pageName={thisPageName}/>
         <Navbar />
         <Routes>
           <Route path = "/" element={<Home />} />

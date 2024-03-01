@@ -54,7 +54,6 @@ function Events() {
     return (
         <div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <h1 className='font-bold'>Events</h1>
                 <div>
                     <Select
                         options={categories.map(category => (

@@ -5,7 +5,7 @@ function Topbar(props){
         <>
             <div className="Topbar flex flex-row items-center">
                 <div>
-                    <h1>{props.pageName}</h1>
+                    <h1 className='text-bold'>{props.pageName}</h1>
                 </div>
                 <div className='ml-auto'>
                     <Link to="/Notifications"><span className="">Notifications</span></Link>
