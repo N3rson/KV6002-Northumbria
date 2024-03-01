@@ -8,7 +8,7 @@ function Topbar(props){
                     <h1 className='text-bold'>{props.pageName}</h1>
                 </div>
                 <div className='ml-auto'>
-                    <Link to="/Notifications"><span className="">Notifications</span></Link>
+                    <Link to="/notifications"><span className="">Notifications</span></Link>
                 </div>
                 
             </div>

@@ -21,10 +21,10 @@ function App() {
     '/events':'Events',
     '/calendar': 'Calendar',
     '/bookings': 'Bookings',
-    '/notifications': 'Notifications',
+    '/notifications': 'Notifications'
   }
 
-  let thisPageName = "Notifications";
+  let thisPageName = "";
   pageNames = Object.entries(pageNames)
   pageNames.map(([key, value] = page)=>{
     if(key == currentPath){
