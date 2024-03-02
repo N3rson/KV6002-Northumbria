@@ -26,10 +26,10 @@ function Bookings() {
     return (
         <div>
         {bookings.map(booking => (
-          <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle'>
-           <h2 className='flex justify-center font-bold'>{booking.BookingDate}</h2>
-           <h2 className='flex justify-center font-bold'>{booking.BookingTime}</h2>
-           <h2 className='flex justify-center font-bold'>event name</h2>
+          <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle p-4'>
+           <h2 className='flex justify-center font-bold'>{booking.EventName}</h2>
+           <h2 className='flex justify-center'>{booking.EventDate} at {booking.EventTime}</h2>
+           <h2 className='flex justify-center'>{booking.EventAddress}, {booking.EventLocation}</h2>
            </div>
           ))}
       </div>

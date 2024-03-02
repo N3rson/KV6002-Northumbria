@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate  } from 'react-router-dom';
-import { collection, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc, increment, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
 import downloadIcon from '../assets/icon_download.png';
@@ -8,7 +8,6 @@ import shareIcon from '../assets/icon_share.png';
 
 
 function EventInfo() {
-
     const [event, setEvent] = useState(null);
     const { eventId } = useParams();
     let navigate = useNavigate();
@@ -34,22 +33,33 @@ function EventInfo() {
 
 
     const handleBookClick = async () => {
-      try {
-          const eventRef = doc(firestore, 'Events', eventId);
-          await updateDoc(eventRef, {
-              EventAttendance: increment(1)
-          });
-          setEvent(prevEvent => ({
-              ...prevEvent,
-              EventAttendance: prevEvent.EventAttendance + 1
-          }));
-      } catch (error) {
-          console.error('Error updating attendance: ', error);
-      }
-  };
+        try {
+            const eventRef = doc(firestore, 'Events', eventId)
+            await updateDoc(eventRef, {
+                EventAttendance: increment(1)
+            })
+            setEvent(prevEvent => ({
+                ...prevEvent,
+                EventAttendance: prevEvent.EventAttendance + 1
+            }))
+
+            const bookingsRef = collection(firestore, 'Bookings')
+            await addDoc(bookingsRef, {
+                EventId: eventRef.id,
+                EventName: event.EventName,
+                EventAddress: event.EventAddress,
+                EventDate: event.EventDate,
+                EventTime: event.EventTime,
+                EventLocation: event.EventLocation
+            })
+
+        } catch (error) {
+            console.error('Error updating attendance: ', error)
+        }
+    }
 
     if (!event) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>
     }
 
     const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
