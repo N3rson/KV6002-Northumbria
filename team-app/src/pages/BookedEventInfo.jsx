@@ -43,6 +43,9 @@ function BookedEventInfo() {
             <div className='flex justify-center'>
                 <img src={qrCode} alt="QR Code" className="h-60 w-60 mt-10" />
             </div>
+            <div className='flex justify-center mt-10'> 
+                <button className='bg-red-400 p-4 rounded-lg text-white'>Cancel Booking</button>
+            </div>
       </div>
     )
   }
