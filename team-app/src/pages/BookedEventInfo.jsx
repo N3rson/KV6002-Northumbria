@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate  } from 'react-router-dom';
-import { collection, doc, getDoc, updateDoc, increment, addDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
 import qrCode from '../assets/qr_code.png';
@@ -31,6 +31,16 @@ function BookedEventInfo() {
         return <div>Loading...</div>
     }
 
+    const handleCancelBooking = async () => {
+        try {
+            const bookingRef = doc(firestore, 'Bookings', bookingId);
+            await deleteDoc(bookingRef);
+            navigate('/bookings');
+        } catch (error) {
+            console.error('Error canceling booking: ', error);
+        }
+    };
+
     return (
       <div>
         <img src={backBtn} alt="Back" className="h-6 w-6 ml-10" onClick={() => navigate(-1)} />
@@ -44,7 +54,7 @@ function BookedEventInfo() {
                 <img src={qrCode} alt="QR Code" className="h-60 w-60 mt-10" />
             </div>
             <div className='flex justify-center mt-10'> 
-                <button className='bg-red-400 p-4 rounded-lg text-white'>Cancel Booking</button>
+                <button className='bg-red-400 p-4 rounded-lg text-white' onClick={handleCancelBooking}>Cancel Booking</button>
             </div>
       </div>
     )
