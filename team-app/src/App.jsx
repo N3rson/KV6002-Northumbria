@@ -5,6 +5,7 @@ import EventInfo from './pages/EventInfo'
 import MyCalendar from './pages/MyCalendar'
 import Bookings from './pages/Bookings'
 import NotFound from './pages/NotFound'
+import BookedEventInfo from './pages/BookedEventInfo'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Topbar from './components/Topbar'
@@ -41,6 +42,7 @@ function App() {
           <Route path = "/" element={<Home />} />
           <Route path = "/events" element={<Events />} />
           <Route path = "/event/:eventId" element={<EventInfo />}/>
+          <Route path = "/booking/:bookingId" element={<BookedEventInfo />} />
           <Route path = "/calendar" element={<MyCalendar />} />
           <Route path = "/bookings" element={<Bookings />} />
           <Route path = "/notifications" element={<Notifications />} />
