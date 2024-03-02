@@ -3,6 +3,7 @@ import { useParams, useNavigate  } from 'react-router-dom';
 import { collection, doc, getDoc, updateDoc, increment, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
+import qrCode from '../assets/qr_code.png';
 
 function BookedEventInfo() {
     const [booking, setBooking] = useState(null);
@@ -38,6 +39,9 @@ function BookedEventInfo() {
                 <p className='flex justify-center text-sm'>{booking.EventAddress},</p>
                 <p className='flex justify-center text-sm'>{booking.EventLocation}</p>
                 <p className='flex justify-center text-sm mt-1'>{booking.EventDate} at {booking.EventTime}</p>
+            </div>
+            <div className='flex justify-center'>
+                <img src={qrCode} alt="QR Code" className="h-60 w-60 mt-10" />
             </div>
       </div>
     )
