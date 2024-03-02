@@ -33,7 +33,7 @@ function App() {
   })
 
   return (
-    <div className='bg-gradient-to-r from-primary to-secondary text-black p-5 text-lg min-h-screen'>
+    <div className='bg-gradient-to-r from-primary to-secondary text-black text-lg min-h-screen'>
         <Topbar pageName={thisPageName}/>
         <Navbar />
         <Routes>
