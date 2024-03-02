@@ -56,7 +56,7 @@ function EventInfo() {
 
     return (
         <div>
-            <img src={backBtn} alt="Back" className="h-6 w-6" onClick={() => navigate(-1)} />
+            <img src={backBtn} alt="Back" className="h-6 w-6 ml-10" onClick={() => navigate(-1)} />
             <div key={event.id} className='ml-10 mr-10 flex flex-col'>
                 <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black'>{event.EventName}</h1>
                 <p className='flex justify-center text-sm'>{event.EventAddress},</p>
@@ -81,7 +81,7 @@ function EventInfo() {
                 </div>
             </div>
             <div className='flex justify-center mt-5'>
-                {!isBookButtonDisabled && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-80 mb-10" onClick={handleBookClick}>Book</button>}
+                {!isBookButtonDisabled && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={handleBookClick}>Book</button>}
                 {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-full' disabled>Book</button>}
             </div>
         </div>

@@ -31,6 +31,7 @@ function App() {
       thisPageName = value;
     }
   })
+  
 
   return (
     <div className='bg-gradient-to-r from-primary to-secondary text-black text-lg min-h-screen'>
@@ -39,7 +40,7 @@ function App() {
         <Routes>
           <Route path = "/" element={<Home />} />
           <Route path = "/events" element={<Events />} />
-          <Route path = "/event/:eventId" element={<EventInfo />} />
+          <Route path = "/event/:eventId" element={<EventInfo />}/>
           <Route path = "/calendar" element={<MyCalendar />} />
           <Route path = "/bookings" element={<Bookings />} />
           <Route path = "/notifications" element={<Notifications />} />
