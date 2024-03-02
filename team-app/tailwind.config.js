@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        'xs': '250px'
+        xs: '250px'
       },
       colors: {
         steelBlue: '#4682B4',

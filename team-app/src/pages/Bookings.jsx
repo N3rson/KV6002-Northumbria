@@ -16,6 +16,7 @@ function Bookings() {
                 id: doc.id,
                 ...doc.data()
             }))
+            
             setBookings(bookingsData)
         } catch (error) {
             console.error('Error fetching bookings: ', error)
@@ -26,14 +27,15 @@ function Bookings() {
 
     return (
         <div>
-        {bookings.map(booking => (
-        <Link key={booking.id} to={'/booking/' + booking.id}>
-          <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle p-4'>
-           <h2 className='flex justify-center font-bold'>{booking.EventName}</h2>
-           <h2 className='flex justify-center'>{booking.EventDate} at {booking.EventTime}</h2>
-           <h2 className='flex justify-center'>{booking.EventAddress}, {booking.EventLocation}</h2>
-           </div>
-        </Link>
+          {bookings.map(booking => (
+            <Link key={booking.id} to={'/booking/' + booking.id}>
+              <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle p-4'>
+              <h2 className='flex justify-center font-bold'>{booking.EventName}</h2>
+              <h2 className='flex justify-center'>{booking.EventDate} at {booking.EventTime}</h2>
+              <h2 className='flex justify-center'>{booking.EventAddress}</h2>
+              <h2 className='flex justify-center'>{booking.EventLocation}</h2>
+              </div>
+            </Link>
           ))}
       </div>
     )
