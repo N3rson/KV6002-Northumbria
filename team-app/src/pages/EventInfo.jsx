@@ -55,7 +55,7 @@ function EventInfo() {
     const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div>
             <img src={backBtn} alt="Back" className="h-6 w-6" onClick={() => navigate(-1)} />
             <div key={event.id} className='ml-10 mr-10 flex flex-col'>
                 <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black'>{event.EventName}</h1>
@@ -63,26 +63,26 @@ function EventInfo() {
                 <p className='flex justify-center text-sm'>{event.EventLocation}</p>
                 <p className='flex justify-center text-sm mt-1'>{event.EventDate} at {event.EventTime}</p>
                 <p className='flex justify-center text-sm mt-1'>Length: {event.EventLength}</p>
-                <p className='flex justify-center mt-10 text-sm bg-white p-6 rounded-xl'>{event.EventDescription}</p>
+                <p className='flex justify-center mt-10 text-sm bg-white p-6 rounded-lg'>{event.EventDescription}</p>
                 <div className="flex justify-center mt-10">
                     <p className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center mr-5">
                         {event.EventAttendance} / {event.EventLimit}
                     </p>
                     <div className="flex items-center justify-center flex-col">
-                        <button className="bg-blue-500 text-white rounded-full flex items-center justify-center mb-2 p-2 w-36">
+                        <button className="bg-blue-500 text-white rounded-lg flex items-center justify-center mb-2 p-2 w-36">
                             <p className='mr-2 text-xs'>Download PDF</p>
                             <img src={downloadIcon} alt="Download" className="h-6 w-6" />
                         </button>
-                        <button className="bg-blue-500 text-white rounded-full flex items-center justify-center mb-2 p-2 w-36">
+                        <button className="bg-blue-500 text-white rounded-lg flex items-center justify-center mb-2 p-2 w-36">
                             <p className='mr-6 text-xs'>Share Event</p>
                             <img src={shareIcon} alt="Download" className="h-6 w-6" />
                         </button>
                     </div>
                 </div>
             </div>
-            <div>
-                {!isBookButtonDisabled && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full" onClick={handleBookClick}>Book</button>}
-                {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded w-full' disabled>Book</button>}
+            <div className='flex justify-center mt-5'>
+                {!isBookButtonDisabled && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-80 mb-10" onClick={handleBookClick}>Book</button>}
+                {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-full' disabled>Book</button>}
             </div>
         </div>
       )

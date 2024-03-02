@@ -20,7 +20,7 @@ function App() {
     '/':'Home',
     '/events':'Events',
     '/calendar': 'Calendar',
-    '/bookings': 'Bookings',
+    '/bookings': 'My Bookings',
     '/notifications': 'Notifications'
   }
 
