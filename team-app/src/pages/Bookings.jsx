@@ -34,6 +34,7 @@ function Bookings() {
               <h2 className='flex justify-center'>{booking.EventDate} at {booking.EventTime}</h2>
               <h2 className='flex justify-center'>{booking.EventAddress}</h2>
               <h2 className='flex justify-center'>{booking.EventLocation}</h2>
+              <h2 className='flex justify-center'>Number of Tickets: {booking.NumberOfTickets}</h2>
               </div>
             </Link>
           ))}

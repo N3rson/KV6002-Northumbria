@@ -43,7 +43,7 @@ function BookedEventInfo() {
                 const eventSnapshot = await getDoc(eventRef)
                 const eventData = eventSnapshot.data()
     
-                const updatedEventAttendance = eventData.EventAttendance - 1
+                const updatedEventAttendance = eventData.EventAttendance - bookingData.NumberOfTickets
                 await updateDoc(eventRef, {
                     EventAttendance: updatedEventAttendance
                 })

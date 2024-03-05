@@ -49,7 +49,6 @@ function EventInfo() {
                 EventAttendance: prevEvent.EventAttendance + bookingsToAdd
             }))
 
-            for (let i = 0; i < bookingsToAdd; i++) {
                 const bookingsRef = collection(firestore, 'Bookings');
                 await addDoc(bookingsRef, {
                     EventId: eventRef.id,
@@ -57,9 +56,9 @@ function EventInfo() {
                     EventAddress: event.EventAddress,
                     EventDate: event.EventDate,
                     EventTime: event.EventTime,
-                    EventLocation: event.EventLocation
+                    EventLocation: event.EventLocation,
+                    NumberOfTickets: bookingsToAdd
                 });
-            }
 
         } catch (error) {
             console.error('Error updating attendance: ', error);
