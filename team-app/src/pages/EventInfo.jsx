@@ -9,6 +9,7 @@ import shareIcon from '../assets/icon_share.png';
 
 function EventInfo() {
     const [event, setEvent] = useState(null);
+    const [selectedBookings, setSelectedBookings] = useState(1);
     const { eventId } = useParams();
     let navigate = useNavigate();
 
@@ -32,26 +33,28 @@ function EventInfo() {
     }, [eventId]);
 
 
-    const handleBookClick = async () => {
+    const handleBookClick = async (bookingsToAdd) => {
         try {
             const eventRef = doc(firestore, 'Events', eventId)
             await updateDoc(eventRef, {
-                EventAttendance: increment(1)
+                EventAttendance: increment(bookingsToAdd)
             })
             setEvent(prevEvent => ({
                 ...prevEvent,
-                EventAttendance: prevEvent.EventAttendance + 1
+                EventAttendance: prevEvent.EventAttendance + bookingsToAdd
             }))
 
             const bookingsRef = collection(firestore, 'Bookings')
-            await addDoc(bookingsRef, {
-                EventId: eventRef.id,
-                EventName: event.EventName,
-                EventAddress: event.EventAddress,
-                EventDate: event.EventDate,
-                EventTime: event.EventTime,
-                EventLocation: event.EventLocation
-            })
+            for(let i = 0; i < bookingsToAdd; i++) {
+                await addDoc(bookingsRef, {
+                    EventId: eventRef.id,
+                    EventName: event.EventName,
+                    EventAddress: event.EventAddress,
+                    EventDate: event.EventDate,
+                    EventTime: event.EventTime,
+                    EventLocation: event.EventLocation
+                })
+            }
 
         } catch (error) {
             console.error('Error updating attendance: ', error)
@@ -91,7 +94,23 @@ function EventInfo() {
                 </div>
             </div>
             <div className='flex justify-center mt-5'>
-                {!isBookButtonDisabled && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={handleBookClick}>Book</button>}
+                {!isBookButtonDisabled && (
+                    <div className="flex justify-center mt-5 flex-col items-center">
+                        <div className="flex items-center mb-2">
+                            <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
+                            <select
+                                id="ticketCount"
+                                value={selectedBookings}
+                                onChange={(e) => setSelectedBookings(Number(e.target.value))}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5">
+                                {[1,2,3,4,5].map(number => (
+                                    <option key={number} value={number}>{number}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleBookClick(selectedBookings)}>Book</button>
+                    </div>
+                )}
                 {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-full' disabled>Book</button>}
             </div>
         </div>
