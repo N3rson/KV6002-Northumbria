@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate  } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { collection, doc, getDoc, updateDoc, increment, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
 import downloadIcon from '../assets/icon_download.png';
 import shareIcon from '../assets/icon_share.png';
 
-
 function EventInfo() {
     const [event, setEvent] = useState(null);
     const [selectedBookings, setSelectedBookings] = useState(1);
+    const [errorMessage, setErrorMessage] = useState('');
     const { eventId } = useParams();
     let navigate = useNavigate();
 
@@ -28,12 +28,17 @@ function EventInfo() {
             }
         };
 
-
         fetchEventData();
     }, [eventId]);
 
-
     const handleBookClick = async (bookingsToAdd) => {
+        if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
+            setErrorMessage(`Not enough spaces for ${bookingsToAdd} tickets.`);
+            return;
+        }
+
+        setErrorMessage('');
+
         try {
             const eventRef = doc(firestore, 'Events', eventId)
             await updateDoc(eventRef, {
@@ -44,8 +49,8 @@ function EventInfo() {
                 EventAttendance: prevEvent.EventAttendance + bookingsToAdd
             }))
 
-            const bookingsRef = collection(firestore, 'Bookings')
-            for(let i = 0; i < bookingsToAdd; i++) {
+            for (let i = 0; i < bookingsToAdd; i++) {
+                const bookingsRef = collection(firestore, 'Bookings');
                 await addDoc(bookingsRef, {
                     EventId: eventRef.id,
                     EventName: event.EventName,
@@ -53,11 +58,12 @@ function EventInfo() {
                     EventDate: event.EventDate,
                     EventTime: event.EventTime,
                     EventLocation: event.EventLocation
-                })
+                });
             }
 
         } catch (error) {
-            console.error('Error updating attendance: ', error)
+            console.error('Error updating attendance: ', error);
+            setErrorMessage('An error occurred while booking. Please try again.');
         }
     }
 
@@ -65,7 +71,7 @@ function EventInfo() {
         return <div>Loading...</div>
     }
 
-    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
+    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit;
 
     return (
         <div>
@@ -93,9 +99,9 @@ function EventInfo() {
                     </div>
                 </div>
             </div>
-            <div className='flex justify-center mt-5'>
+            <div className='flex justify-center mt-5 flex-col items-center'>
                 {!isBookButtonDisabled && (
-                    <div className="flex justify-center mt-5 flex-col items-center">
+                    <>
                         <div className="flex items-center mb-2">
                             <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
                             <select
@@ -108,8 +114,9 @@ function EventInfo() {
                                 ))}
                             </select>
                         </div>
+                        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleBookClick(selectedBookings)}>Book</button>
-                    </div>
+                    </>
                 )}
                 {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-full' disabled>Book</button>}
             </div>
