@@ -82,8 +82,9 @@ function BookedEventInfo() {
             <BackBtn />
             <div key={booking.id} className='ml-10 mr-10 flex flex-col'>
                 <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black'>{booking.EventName}</h1>
-                <p className='flex justify-center text-sm mt-10'>{booking.EventAddress}, {booking.EventLocation}</p>
-                <p className='flex justify-center text-sm mt-1'>{booking.EventDate} at {booking.EventTime}</p>
+                <p className='flex justify-center text-lg mt-10'>{booking.EventAddress}</p>
+                <p className='flex justify-center text-lg'>{booking.EventLocation}</p>
+                <p className='flex justify-center text-lg mt-4'>{booking.EventDate} at {booking.EventTime}</p>
             </div>
             <div className='flex flex-col items-center mt-10'>
                 <p className='text-lg'>My Tickets:</p>
