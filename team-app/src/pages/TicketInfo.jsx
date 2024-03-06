@@ -19,14 +19,14 @@ function TicketInfo(){
     
             const bookingRef = doc(firestore, 'Bookings', bookingId);
             const ticketRef = doc(bookingRef, 'Tickets', ticketId);
-    
+
             await deleteDoc(ticketRef);
-    
             const bookingSnapshot = await getDoc(bookingRef);
             if (!bookingSnapshot.exists()) {
                 console.error('Booking not found');
                 return;
             }
+
             const bookingData = bookingSnapshot.data();
             const updatedNumberOfTickets = bookingData.NumberOfTickets - 1;
     

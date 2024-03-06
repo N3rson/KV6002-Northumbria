@@ -37,8 +37,7 @@ function EventInfo() {
             return;
         }
     
-        // Ask for confirmation
-        const confirmBooking = window.confirm(`Are you sure you want to book ${bookingsToAdd} tickets?`);
+        const confirmBooking = window.confirm('Are you sure you want to book ' + bookingsToAdd + ' ticket/s?');
         if (!confirmBooking) {
             return;
         }
@@ -97,7 +96,7 @@ function EventInfo() {
                 <p className='flex justify-center text-sm mt-1'>{event.EventLength} Duration</p>
                 <p className='flex justify-center mt-10 text-sm bg-white p-6 rounded-lg'>{event.EventDescription}</p>
                 <div className="flex justify-center mt-10">
-                    <p className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center mr-5">
+                    <p className="h-20 w-20 bg-white rounded-lg flex items-center justify-center mr-5">
                         {event.EventAttendance} / {event.EventLimit}
                     </p>
                     <div className="flex items-center justify-center flex-col">
