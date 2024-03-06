@@ -2,18 +2,64 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import qrCode from '../assets/qr_code.png';
 import BackBtn from '../components/BackBtn';
-import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 
 function TicketInfo(){
-    const { ticketId } = useParams();
+    const { ticketId, bookingId } = useParams();
     let navigate = useNavigate();
 
-
     const handleTicketCancellation = async () => {
-
-    }
-
+        try {
+            // Confirm cancellation
+            const confirmed = window.confirm("Are you sure you want to cancel this ticket?");
+            if (!confirmed) {
+                console.error('Ticket cancellation was aborted.');
+                return;
+            }
+    
+            const bookingRef = doc(firestore, 'Bookings', bookingId);
+            const ticketRef = doc(bookingRef, 'Tickets', ticketId);
+    
+            // Delete the ticket
+            await deleteDoc(ticketRef);
+    
+            const bookingSnapshot = await getDoc(bookingRef);
+            if (!bookingSnapshot.exists()) {
+                console.error('Booking not found');
+                return;
+            }
+            const bookingData = bookingSnapshot.data();
+            const updatedNumberOfTickets = bookingData.NumberOfTickets - 1;
+    
+        if (updatedNumberOfTickets === 0) {
+            await deleteDoc(bookingRef);
+            navigate('/bookings');
+        } else {
+            // Update the booking's NumberOfTickets
+            await updateDoc(bookingRef, { NumberOfTickets: updatedNumberOfTickets });
+        }
+    
+            // Update the event's EventAttendance
+            const eventRef = doc(firestore, 'Events', bookingData.EventId);
+            const eventSnapshot = await getDoc(eventRef);
+            if (!eventSnapshot.exists()) {
+                console.error('Event not found');
+                return;
+            }
+            const eventData = eventSnapshot.data();
+            const updatedEventAttendance = eventData.EventAttendance - 1;
+    
+            await updateDoc(eventRef, {
+                EventAttendance: updatedEventAttendance
+            });
+    
+            window.alert('Ticket successfully cancelled.');
+            navigate('/bookings');
+        } catch (error) {
+            console.error('Error canceling ticket: ', error);
+        }
+    };
 
     return(
         <div>
