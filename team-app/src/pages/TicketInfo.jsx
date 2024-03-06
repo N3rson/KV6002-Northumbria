@@ -11,7 +11,6 @@ function TicketInfo(){
 
     const handleTicketCancellation = async () => {
         try {
-            // Confirm cancellation
             const confirmed = window.confirm("Are you sure you want to cancel this ticket?");
             if (!confirmed) {
                 console.error('Ticket cancellation was aborted.');
@@ -21,7 +20,6 @@ function TicketInfo(){
             const bookingRef = doc(firestore, 'Bookings', bookingId);
             const ticketRef = doc(bookingRef, 'Tickets', ticketId);
     
-            // Delete the ticket
             await deleteDoc(ticketRef);
     
             const bookingSnapshot = await getDoc(bookingRef);
@@ -36,11 +34,8 @@ function TicketInfo(){
             await deleteDoc(bookingRef);
             navigate('/bookings');
         } else {
-            // Update the booking's NumberOfTickets
             await updateDoc(bookingRef, { NumberOfTickets: updatedNumberOfTickets });
         }
-    
-            // Update the event's EventAttendance
             const eventRef = doc(firestore, 'Events', bookingData.EventId);
             const eventSnapshot = await getDoc(eventRef);
             if (!eventSnapshot.exists()) {

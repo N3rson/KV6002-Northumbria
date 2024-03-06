@@ -89,7 +89,7 @@ function BookedEventInfo() {
             <div className='flex flex-col items-center mt-10'>
                 <p className='text-lg'>My Tickets:</p>
                 {tickets.map(ticket => (
-                    <Link key={ticket.id} to={`/ticket/${ticket.id}/${bookingId}`}>
+                    <Link key={ticket.id} to={'/booking/' + bookingId + '/ticket/' + ticket.id}>
                         <button className='bg-steelBlue rounded-lg text-white xs:w-72 md:w-80 m-2 h-20 flex items-center justify-between'>
                             <p className='ml-2'>{ticketNumber++}</p>
                             <span>{ticket.id}</span>
