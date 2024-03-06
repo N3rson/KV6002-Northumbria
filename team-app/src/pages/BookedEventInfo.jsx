@@ -100,7 +100,6 @@ function BookedEventInfo() {
             <div className='flex justify-center mt-10'>
                 <button className='bg-red-400 p-4 rounded-lg text-white xs:w-72 md:w-80 mb-24' onClick={handleCancelBooking}>Cancel Entire Booking</button>
             </div>
-            <TicketInfo bookingId={bookingId} />
       </div>
     )
   }
