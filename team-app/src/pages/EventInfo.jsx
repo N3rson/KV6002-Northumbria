@@ -36,44 +36,49 @@ function EventInfo() {
             setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
             return;
         }
-
+    
+        // Ask for confirmation
+        const confirmBooking = window.confirm(`Are you sure you want to book ${bookingsToAdd} tickets?`);
+        if (!confirmBooking) {
+            return;
+        }
+    
         setErrorMessage('');
-
+    
         try {
-            const eventRef = doc(firestore, 'Events', eventId)
+            const eventRef = doc(firestore, 'Events', eventId);
             await updateDoc(eventRef, {
                 EventAttendance: increment(bookingsToAdd)
-            })
+            });
             setEvent(prevEvent => ({
                 ...prevEvent,
                 EventAttendance: prevEvent.EventAttendance + bookingsToAdd
-            }))
-
-                const bookingsRef = collection(firestore, 'Bookings');
-                const bookingDocRef = await addDoc(bookingsRef, {
-                    EventId: eventRef.id,
-                    EventName: event.EventName,
-                    EventAddress: event.EventAddress,
-                    EventDate: event.EventDate,
-                    EventTime: event.EventTime,
-                    EventLocation: event.EventLocation,
-                    NumberOfTickets: bookingsToAdd
-                });
-
-                const ticketsRef = collection(bookingDocRef, 'Tickets');
-
-                for (let i = 0; i < bookingsToAdd; i++){
-                    await addDoc(ticketsRef, {
-
-                    });
+            }));
+    
+            const bookingsRef = collection(firestore, 'Bookings');
+            const bookingDocRef = await addDoc(bookingsRef, {
+                EventId: eventRef.id,
+                EventName: event.EventName,
+                EventAddress: event.EventAddress,
+                EventDate: event.EventDate,
+                EventTime: event.EventTime,
+                EventLocation: event.EventLocation,
+                NumberOfTickets: bookingsToAdd
+            });
+    
+            const ticketsRef = collection(bookingDocRef, 'Tickets');
+    
+            for (let i = 0; i < bookingsToAdd; i++) {
+                await addDoc(ticketsRef, {});
             }
-        
-
+    
+            alert('Booking successful!');
+    
         } catch (error) {
             console.error('Error updating attendance: ', error);
             setErrorMessage('An error occurred while booking. Please try again.');
         }
-    }
+    };
 
     if (!event) {
         return <div>Loading...</div>
