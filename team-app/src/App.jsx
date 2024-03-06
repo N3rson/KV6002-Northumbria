@@ -5,6 +5,7 @@ import Events from './pages/Events';
 import EventInfo from './pages/EventInfo';
 import MyCalendar from './pages/MyCalendar';
 import Bookings from './pages/Bookings';
+import TicketInfo from './pages/TicketInfo';
 import NotFound from './pages/NotFound';
 import BookedEventInfo from './pages/BookedEventInfo';
 import LoginPage from './pages/LoginPage';
@@ -26,7 +27,7 @@ function App() {
         setCurrentUser(user);
       } else {
         setCurrentUser(null);
-        navigate('/login'); // Redirect to login page if not logged in
+        navigate('/login');
       }
     });
 
@@ -61,6 +62,7 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/event/:eventId" element={<EventInfo />} />
         <Route path="/booking/:bookingId" element={<BookedEventInfo />} />
+        <Route path="/ticket/:ticketId" element={<TicketInfo />} />
         <Route path="/calendar" element={<MyCalendar />} />
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/notifications" element={<Notifications />} />

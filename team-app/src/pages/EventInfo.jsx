@@ -33,7 +33,7 @@ function EventInfo() {
 
     const handleBookClick = async (bookingsToAdd) => {
         if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
-            setErrorMessage(`Not enough spaces for ${bookingsToAdd} tickets.`);
+            setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
             return;
         }
 
@@ -50,7 +50,7 @@ function EventInfo() {
             }))
 
                 const bookingsRef = collection(firestore, 'Bookings');
-                await addDoc(bookingsRef, {
+                const bookingDocRef = await addDoc(bookingsRef, {
                     EventId: eventRef.id,
                     EventName: event.EventName,
                     EventAddress: event.EventAddress,
@@ -59,6 +59,15 @@ function EventInfo() {
                     EventLocation: event.EventLocation,
                     NumberOfTickets: bookingsToAdd
                 });
+
+                const ticketsRef = collection(bookingDocRef, 'Tickets');
+
+                for (let i = 0; i < bookingsToAdd; i++){
+                    await addDoc(ticketsRef, {
+
+                    });
+            }
+        
 
         } catch (error) {
             console.error('Error updating attendance: ', error);
