@@ -13,7 +13,9 @@ export default {
       colors: {
         steelBlue: '#4682B4',
         primary: '#e1ebfc',
-        secondary: '#fcd9d2'
+        secondary: '#fcd9d2',
+        colour1: '#A2BEEF',
+        colour2: '#FBB2A3',
       },
     },
     borderRadius: {
