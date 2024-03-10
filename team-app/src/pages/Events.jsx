@@ -66,18 +66,22 @@ function Events() {
                         handleSelectType={handleSelectCategory}
                     />
                 </div>
-                {filteredEvents.map(event => (
-                <Link key={event.id} to={'/event/' + event.id}>
-                    <div key={event.id} className='bg-white rounded-lg p-4 border-black m-10 shadow-2xl shadow-middle'>
-                        <h2 className='flex justify-center font-bold'>{event.EventName}</h2>
-                        <p className='flex justify-center'>{event.EventCategory}</p>
-                        <p className='flex justify-center'>{event.EventDate}</p>
-                        <p className='flex justify-center'>{event.EventAttendance} / {event.EventLimit}</p>
-                        <p className='flex justify-center'>{event.EventLocation}</p>
-                    </div>
-                </Link>
-                ))}
-             </div>
+                {filteredEvents.length === 0 ? (
+                <h1 className='flex justify-center mt-20'>No Events to show</h1>
+                    ) : (
+                        filteredEvents.map(event => (
+                            <Link key={event.id} to={'/event/' + event.id}>
+                                <div key={event.id} className='bg-white rounded-lg p-4 border-black m-10 shadow-2xl shadow-middle'>
+                                    <h2 className='flex justify-center font-bold'>{event.EventName}</h2>
+                                    <p className='flex justify-center'>{event.EventCategory}</p>
+                                    <p className='flex justify-center'>{event.EventDate}</p>
+                                    <p className='flex justify-center'>{event.EventAttendance} / {event.EventLimit}</p>
+                                    <p className='flex justify-center'>{event.EventLocation}</p>
+                                </div>
+                            </Link>
+                        ))
+                    )}
+                </div>
         </div>
     )
 }

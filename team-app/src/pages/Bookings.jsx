@@ -25,6 +25,10 @@ function Bookings() {
     fetchBookings()
   }, [])
 
+  if (bookings.length === 0) {
+    return <h1 className='flex justify-center mt-20'>No Bookings to show</h1>
+  }
+
     return (
         <div>
           {bookings.map(booking => (
