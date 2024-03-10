@@ -55,8 +55,8 @@ function App() {
 
   return (
     //<div className='bg-gradient-to-r from-primary to-secondary text-black text-lg min-h-screen'>
-    <div className="relative text-black text-lg min-h-screen"> 
-      <div>
+    <div className="overflow-x-hidden relative text-black text-lg min-h-screen"> 
+      <div className="">
         <div className="absolute -top-40 -left-40 -z-10 mix-blend-multiply w-96 h-96 blur-2xl bg-primary rounded-full"></div>
         <div className="absolute top-10 left-80 -z-10 mix-blend-multiply w-80 h-80 blur-2xl bg-secondary rounded-full"></div>
         <div className="absolute -top-10 left-40 -z-10 mix-blend-multiply w-48 h-48 blur-2xl bg-secondary rounded-full"></div>
