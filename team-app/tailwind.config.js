@@ -12,8 +12,8 @@ export default {
       },
       colors: {
         steelBlue: '#4682B4',
-        primary: '#e1ebfc',
-        secondary: '#fcd9d2',
+        primary: '#edf4ff',
+        secondary: '#fcf0ed',
         colour1: '#A2BEEF',
         colour2: '#FBB2A3',
       },
@@ -21,6 +21,7 @@ export default {
     borderRadius: {
       lg: '0.5rem',
       xlg: '2rem',
+      full: '9999px'
     },
     boxShadow: {
       middle: '0 0px 15px -3px rgb(0 0 0 / 0.2)',

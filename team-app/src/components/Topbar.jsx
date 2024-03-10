@@ -5,9 +5,9 @@ import icon_notifications_full from '../assets/icon_notifications_filled.png'
 function Topbar(props){
     return (
         <>
-            <div className="Topbar flex flex-row items-center bg-white shadow-middle mb-5 p-4">
+            <div className="Topbar flex flex-row items-center mb-5 p-4">
                 <div>
-                    <h1 className='font-bold'>{props.pageName}</h1>
+                    <h1 className='font-bold text-xl'>{props.pageName}</h1>
                 </div>
                 <div className='ml-auto'>
 

@@ -16,7 +16,7 @@ function Navbar() {
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white rounded-t-xlg shadow-middle">
-      <div className="flex justify-around p-5">
+      <div className="flex justify-around p-4">
         <Link to="/" className={currentPath === '/' ? activeClass : linkClass}>
           <img src={homepage_icon} alt="Home" className="h-6 w-6" />
         </Link>
