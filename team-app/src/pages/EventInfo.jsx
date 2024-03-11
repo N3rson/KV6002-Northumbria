@@ -5,6 +5,7 @@ import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
 import downloadIcon from '../assets/icon_download.png';
 import shareIcon from '../assets/icon_share.png';
+import { auth } from '../firebaseConfig';
 
 function EventInfo() {
     const [event, setEvent] = useState(null);
@@ -12,6 +13,7 @@ function EventInfo() {
     const [errorMessage, setErrorMessage] = useState('');
     const { eventId } = useParams();
     let navigate = useNavigate();
+    const currentUser = auth.currentUser
 
     useEffect(() => {
         const fetchEventData = async () => {
@@ -62,7 +64,8 @@ function EventInfo() {
                 EventDate: event.EventDate,
                 EventTime: event.EventTime,
                 EventLocation: event.EventLocation,
-                NumberOfTickets: bookingsToAdd
+                NumberOfTickets: bookingsToAdd,
+                userId: currentUser.uid 
             });
     
             const ticketsRef = collection(bookingDocRef, 'Tickets');

@@ -1,17 +1,20 @@
 import { firestore } from '../firebaseConfig'
 import React, { useState, useEffect } from 'react'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom';
+import { auth } from '../firebaseConfig';
 
 function Bookings() {
 
   const [bookings, setBookings] = useState([])
+  const currentUser = auth.currentUser;
 
   useEffect(() => {
     const fetchBookings = async () => {
         try {
             const bookingsCollection = collection(firestore, 'Bookings')
-            const bookingsSnapshot = await getDocs(bookingsCollection)
+            const userBookingsQuery = query(bookingsCollection, where("userId", "==", currentUser.uid));
+            const bookingsSnapshot = await getDocs(userBookingsQuery)
             const bookingsData = bookingsSnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
@@ -22,8 +25,10 @@ function Bookings() {
             console.error('Error fetching bookings: ', error)
         }
     }
-    fetchBookings()
-  }, [])
+    if (currentUser) {
+      fetchBookings();
+  }
+}, [currentUser]);
 
   if (bookings.length === 0) {
     return <h1 className='flex justify-center mt-20'>No Bookings to show</h1>
