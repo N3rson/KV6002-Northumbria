@@ -44,7 +44,10 @@ function Bookings() {
           onClick={handleReserveAccess}>Access Waiting List</button>
         </div>
         {bookings.length === 0 && (
-          <h1 className='flex justify-center mt-20'>No Bookings to show</h1>
+          <div>
+            <h1 className='flex justify-center mt-20'>No confirmed Bookings to show.</h1>
+            <h2 className='flex justify-center'>Please check the waiting list!</h2>
+          </div>
         )}
           {bookings.map(booking => (
             <Link key={booking.id} to={'/booking/' + booking.id}>

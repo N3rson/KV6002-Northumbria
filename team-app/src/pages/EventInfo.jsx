@@ -30,8 +30,8 @@ function EventInfo() {
         const checkIfAlreadyJoined = async () => {
             if (currentUser) {
                 const currentUserId = currentUser.uid;
-                const bookingsQuery = query(collection(firestore, 'Bookings'), where('EventId', '==', eventId), where('userId', '==', currentUserId));
-                const waitingListQuery = query(collection(firestore, 'WaitingList'), where('EventId', '==', eventId), where('userId', '==', currentUserId));
+                const bookingsQuery = query(collection(firestore, 'Bookings'), where('EventId', '==', eventId), where('userId', '==', currentUserId))
+                const waitingListQuery = query(collection(firestore, 'WaitingList'), where('EventId', '==', eventId), where('userId', '==', currentUserId))
             
                 const bookingsSnapshot = await getDocs(bookingsQuery);
                 const waitingListSnapshot = await getDocs(waitingListQuery);
@@ -70,7 +70,7 @@ function EventInfo() {
             EventAttendance: prevEvent.EventAttendance + bookingsToAdd
         }));
     
-        const waitingListRef = collection(firestore, 'WaitingList');
+        const waitingListRef = collection(firestore, 'WaitingList')
         const waitingListDocRef = await addDoc(waitingListRef, {
             EventId: eventRef.id,
             EventName: event.EventName,
@@ -80,19 +80,19 @@ function EventInfo() {
             EventLocation: event.EventLocation,
             Places: bookingsToAdd,
             userId: currentUser.uid
-        });
+        })
     
         setSelectedBookings(bookingsToAdd);
     
-        const ticketsRef = collection(waitingListDocRef, 'Tickets');
+        const ticketsRef = collection(waitingListDocRef, 'Tickets')
         for (let i = 0; i < bookingsToAdd; i++) {
-            await addDoc(ticketsRef, {});
+            await addDoc(ticketsRef, {})
         }
     
-        alert("Added to waiting list. You will be required to confirm before attending the event.");
+        alert("Added to waiting list. You will be required to confirm before attending the event.")
     };
 
-    const isJoinButtonDisabled = alreadyJoined || event.EventAttendance >= event.EventLimit;
+    const isJoinButtonDisabled = alreadyJoined || event.EventAttendance >= event.EventLimit
 
     return (
         <div>
