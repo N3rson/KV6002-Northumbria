@@ -11,34 +11,30 @@ const localizer = momentLocalizer(moment)
 
 function MyCalendar() {
 
-  const [CalendarEvents, setEvents] = useState([]);
+  const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   
   useEffect(() => {
     const fetchEvents = async () => {
-      const eventsCollection = collection(firestore, 'Events');
-      const eventsSnapshot = await getDocs(eventsCollection);
-
-      const eventsData = [];
-      eventsSnapshot.forEach((doc) => {
-        const eventdata = {
-          id: doc.id,
-          title: doc.data().EventName,
-          starts: new Date (doc.data().start.EventDate.toMillis()),
-          end: new Date(doc.data().end.EventDate.toMillis()),
-          location: doc.data().EventAddress,
-          // eventPageLink: '/events/${doc.id}', 
-          // to be adjusted to route to events page
-        };
-
-        eventsData.push(eventdata);
-      });
-
-      setEvents(eventsData);
-    };
+        const eventsCollection = collection(firestore, 'Events')
+        const eventsSnapshot = await getDocs(eventsCollection)
     
-    fetchEvents();
-  }, []);
+        const eventsData = []
+        eventsSnapshot.forEach((doc) => {
+          const eventdata = {
+            id: doc.id,
+            title: doc.data().EventName,
+            start: new Date(doc.data().EventDate),
+            end: new Date(doc.data().EventDate),
+            location: doc.data().EventAddress,
+          }
+          eventsData.push(eventdata)
+        })
+        setCalendarEvents(eventsData)
+    }
+    
+    fetchEvents()
+  }, [])
   
   const handleEventClick = (event) => {
     setSelectedEvent(event);
