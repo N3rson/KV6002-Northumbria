@@ -32,19 +32,20 @@ function Bookings() {
   }
 }, [currentUser]);
 
-  if (bookings.length === 0) {
-    return <h1 className='flex justify-center mt-20'>No Bookings to show</h1>
-  }
-
   const handleReserveAccess = () => {
     navigate('/waitinglist/');
 };
 
     return (
-        <div>
-          <div className='flex justify-center'>
-            <button className='bg-black w-60 rounded-xlg shadow-middle border-2 border-gray-200 text-xl text-white p-2' onClick={handleReserveAccess}>Access Waiting List</button>
-          </div>
+      <div>
+        <div className='flex justify-center'>
+        <button
+          className='bg-black w-60 rounded-xlg shadow-middle border-2 border-gray-200 text-xl text-white p-2'
+          onClick={handleReserveAccess}>Access Waiting List</button>
+        </div>
+        {bookings.length === 0 && (
+          <h1 className='flex justify-center mt-20'>No Bookings to show</h1>
+        )}
           {bookings.map(booking => (
             <Link key={booking.id} to={'/booking/' + booking.id}>
               <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle p-4'>
