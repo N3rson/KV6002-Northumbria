@@ -14,6 +14,7 @@ import Navbar from './components/Navbar';
 import Topbar from './components/Topbar';
 import { useLocation } from 'react-router-dom';
 import Notifications from './pages/Notifications';
+import WaitingList from './pages/WaitingList';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -38,7 +39,7 @@ function App() {
     '/': 'Home',
     '/events': 'Events',
     '/calendar': 'Calendar',
-    '/bookings': 'My Bookings',
+    '/bookings': 'Confirmed Bookings',
     '/notifications': 'Notifications'
   };
 
@@ -78,6 +79,7 @@ function App() {
         <Route path="/booking/:bookingId/ticket/:ticketId/" element={<TicketInfo />} />
         <Route path="/calendar" element={<MyCalendar />} />
         <Route path="/bookings" element={<Bookings />} />
+        <Route path="/waitinglist" element={<WaitingList />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -17,46 +17,42 @@ function EventInfo() {
 
     useEffect(() => {
         const fetchEventData = async () => {
-            try {
-                const eventRef = doc(firestore, 'Events', eventId);
-                const eventSnapshot = await getDoc(eventRef);
-                if (eventSnapshot.exists()) {
-                    setEvent(eventSnapshot.data());
-                } else {
-                    console.error('Event not found');
-                }
-            } catch (error) {
-                console.error('Error fetching event data: ', error);
+            const eventRef = doc(firestore, 'Events', eventId)
+            const eventSnapshot = await getDoc(eventRef)
+            if (eventSnapshot.exists()) {
+                setEvent(eventSnapshot.data())
+            } else {
+                console.error('Event not found')
             }
-        };
+        }
 
-        fetchEventData();
-    }, [eventId]);
+        fetchEventData()
+    }, [eventId])
 
     const handleBookClick = async (bookingsToAdd) => {
         if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
-            setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
-            return;
+            setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.')
+            return
         }
     
-        const confirmBooking = window.confirm('Are you sure you want to book ' + bookingsToAdd + ' ticket/s?');
+        const confirmBooking = window.confirm('Are you sure you want to book ' + bookingsToAdd + ' ticket/s?')
         if (!confirmBooking) {
-            return;
+            return
         }
     
-        setErrorMessage('');
+        setErrorMessage('')
     
         try {
-            const eventRef = doc(firestore, 'Events', eventId);
+            const eventRef = doc(firestore, 'Events', eventId)
             await updateDoc(eventRef, {
                 EventAttendance: increment(bookingsToAdd)
-            });
+            })
             setEvent(prevEvent => ({
                 ...prevEvent,
                 EventAttendance: prevEvent.EventAttendance + bookingsToAdd
-            }));
+            }))
     
-            const bookingsRef = collection(firestore, 'Bookings');
+            const bookingsRef = collection(firestore, 'Bookings')
             const bookingDocRef = await addDoc(bookingsRef, {
                 EventId: eventRef.id,
                 EventName: event.EventName,
@@ -66,19 +62,19 @@ function EventInfo() {
                 EventLocation: event.EventLocation,
                 NumberOfTickets: bookingsToAdd,
                 userId: currentUser.uid 
-            });
+            })
     
-            const ticketsRef = collection(bookingDocRef, 'Tickets');
+            const ticketsRef = collection(bookingDocRef, 'Tickets')
     
             for (let i = 0; i < bookingsToAdd; i++) {
-                await addDoc(ticketsRef, {});
+                await addDoc(ticketsRef, {})
             }
     
-            alert('Booking successful!');
+            alert('Booking successful!')
     
         } catch (error) {
-            console.error('Error updating attendance: ', error);
-            setErrorMessage('An error occurred while booking. Please try again.');
+            console.error('Error updating attendance: ', error)
+            setErrorMessage('An error occurred while booking. Please try again.')
         }
     };
 
@@ -86,7 +82,7 @@ function EventInfo() {
         return <div>Loading...</div>
     }
 
-    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit;
+    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
 
     return (
         <div>
@@ -130,7 +126,10 @@ function EventInfo() {
                             </select>
                         </div>
                         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleBookClick(selectedBookings)}>Book</button>
+                        <p className='text-sm mt-10 mb-2'>You can only book 3 days before the event</p>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
+                        <p className='text-sm mb-2'>Join the wait!</p>
+                        <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20">Join</button>
                     </>
                 )}
                 {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-full' disabled>Book</button>}
