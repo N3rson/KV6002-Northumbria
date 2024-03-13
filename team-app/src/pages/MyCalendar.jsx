@@ -21,17 +21,37 @@ function MyCalendar() {
     
         const eventsData = []
         eventsSnapshot.forEach((doc) => {
+          console.log('Event Data: ', doc.data());
+
+          const startDate = new Date(doc.data().EventDate + 'T' + doc.data().EventTime);
+          //const durationInMinutes = doc.data().EventLength || 60; // Default duration is 60 minutes
+          // TO FIX EventLength cause that too is a string
+          const eventLengthMatch = doc.data().EventLength.match(/(\d+)hrs (\d+)min/);
+  
+          const hours = eventLengthMatch ? parseInt(eventLengthMatch[1], 10) : 0;
+          const minutes = eventLengthMatch ? parseInt(eventLengthMatch[2], 10) : 0;
+
+          // Calculate end time by adding the parsed duration to the start time
+          const endDate = new Date(startDate.getTime() + hours * 60 * 60 * 1000 + minutes * 60 * 1000);
+
+          // Combine address and city to create the location
+          const location = `${doc.data().EventAddress}, ${doc.data().EventLocation}`;
+
+
           const eventdata = {
-            id: doc.id,
             title: doc.data().EventName,
-            start: new Date(doc.data().EventDate),
-            end: new Date(doc.data().EventDate),
+            start: startDate,
+            end: endDate,
             location: doc.data().EventAddress,
+            // eventPageLink: '/events/${doc.id}', 
+            // to be adjusted to route to events page
+
           }
           eventsData.push(eventdata)
         })
         setCalendarEvents(eventsData)
     }
+    
     
     fetchEvents()
   }, [])
