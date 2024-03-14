@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -74,13 +74,11 @@ function MyCalendar() {
   
   const handleEventClick = (event) => {
     setSelectedEvent(event);
-  }
+  };
 
   const closeModal = () => {
     setSelectedEvent(null);
   };
-
-  const modalRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -109,7 +107,7 @@ function MyCalendar() {
         
         {selectedEvent && (
   <div className="blurred-background">
-    <div className="event-details-modal">
+    <div className="event-details-modal" > {/* ref={modalRef}> to define? */}
       <span className="close-button" onClick={closeModal}>
         <img src={DownloadBtn} alt="Download"/>
         <img src={CloseBtn} alt="Close" />
