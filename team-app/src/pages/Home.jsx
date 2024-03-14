@@ -1,3 +1,6 @@
+import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
 
 function SeeAllButton() {
   return (
@@ -48,6 +51,19 @@ function Home() {
           <p className="font-semibold text-colour2">Title</p>
           <p>Location</p>
         </div>
+      </div>
+
+      <div>
+          <Flicking
+              align="prev"
+              circular={false}
+              onMoveEnd={e => {
+              console.log(e);
+              }}>
+              <div className="panel w-3/4 h-20 bg-white rounded-lg p-5 m-2 shadow-2xl">1</div>
+              <div className="panel w-3/4 h-20 bg-white rounded-lg p-5 m-2 shadow-2xl">2</div>
+              <div className="panel w-3/4 h-20 bg-white rounded-lg p-5 m-2 shadow-2xl">3</div>
+          </Flicking>
       </div>
 
     </div>
