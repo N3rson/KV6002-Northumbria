@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -7,7 +7,6 @@ import { firestore } from '../firebaseConfig'
 import './MyCalendarStyle.css'
 import DownloadBtn from '../assets/icon_download.png';
 import CloseBtn from '../assets/icon_close.png';
-import React, { useState, useEffect, useRef } from 'react';
 
 
 
