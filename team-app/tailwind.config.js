@@ -16,6 +16,7 @@ export default {
         secondary: '#fcf0ed',
         colour1: '#A2BEEF',
         colour2: '#FBB2A3',
+        buttonHover: '#facac0',
       },
     },
     borderRadius: {
