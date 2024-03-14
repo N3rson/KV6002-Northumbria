@@ -4,6 +4,9 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { collection, getDocs, updateDoc } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
+import './MyCalendarStyle.css'
+import DownloadBtn from '../assets/icon_download.png';
+import CloseBtn from '../assets/icon_close.png'
 
 
 
@@ -89,16 +92,19 @@ function MyCalendar() {
         />
         
         {selectedEvent && (
-          <div className="event-details-modal">
-            <h3>{selectedEvent.title}</h3>
-            <p>Location: {selectedEvent.location}</p>
-            <p>Status: {selectedEvent.isBooked ? 'Booked' : 'Not Booked'}</p>
-            <a href={selectedEvent.eventPageLink}>Event Page</a>
-            <button onClick={closeModal}>Close</button>
-            <button>Export to Calendar </button>
-          </div>
-
-        )}
+  <div className="blurred-background">
+    <div className="event-details-modal">
+      <span className="close-button" onClick={closeModal}>X</span>
+      <a href={`/events/${selectedEvent.id}`} className="export-button">
+        <img src={DownloadBtn} alt="Download" />
+      </a>
+      <h3>{selectedEvent.title}</h3>
+      <p>Location: {selectedEvent.location}</p>
+      <p>Status: {selectedEvent.isBooked ? 'Booked' : 'Not Booked'}</p>
+      <a href={`/events/${selectedEvent.id}`}>Event Page</a>
+    </div>
+  </div>
+)}
 
       </div>
     );
