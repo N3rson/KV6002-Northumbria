@@ -23,14 +23,27 @@ function MyCalendar() {
         eventsSnapshot.forEach((doc) => {
           console.log('Event Data: ', doc.data());
 
-          const startDate = new Date(doc.data().EventDate + 'T' + doc.data().EventTime);
-          //const durationInMinutes = doc.data().EventLength || 60; // Default duration is 60 minutes
-          // TO FIX EventLength cause that too is a string
+          // Parse EventDate and EventTime to create start date
+          const eventDateString = doc.data().EventDate;
+          const eventTimeString = doc.data().EventTime;
+
+          // Split EventDate into month, day, and year components
+          const [month, day, year] = eventDateString.split('/');
+
+          // Split EventTime into hour and minute components
+          const [hour, minute] = eventTimeString.split(':');
+
+          // Create a new Date object using year, month (subtract 1 as months are zero-indexed), day, hour, and minute
+          const startDate = new Date(year, month - 1, day, hour, minute);
+          
+          //no longer need console.log issue has been resolved
+          //console.log('startDate:'), startDate;
+
+          // Calculate event duration from EventLength
           const eventLengthMatch = doc.data().EventLength.match(/(\d+)hrs (\d+)min/);
-  
           const hours = eventLengthMatch ? parseInt(eventLengthMatch[1], 10) : 0;
           const minutes = eventLengthMatch ? parseInt(eventLengthMatch[2], 10) : 0;
-
+          
           // Calculate end time by adding the parsed duration to the start time
           const endDate = new Date(startDate.getTime() + hours * 60 * 60 * 1000 + minutes * 60 * 1000);
 
