@@ -6,7 +6,8 @@ import { collection, getDocs, updateDoc } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
 import './MyCalendarStyle.css'
 import DownloadBtn from '../assets/icon_download.png';
-import CloseBtn from '../assets/icon_close.png'
+import CloseBtn from '../assets/icon_close.png';
+import React, { useState, useEffect, useRef } from 'react';
 
 
 
@@ -80,6 +81,22 @@ function MyCalendar() {
     setSelectedEvent(null);
   };
 
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setSelectedEvent(null); // Close the modal
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
     return (
       <div>
         <Calendar
@@ -94,14 +111,14 @@ function MyCalendar() {
         {selectedEvent && (
   <div className="blurred-background">
     <div className="event-details-modal">
-      <span className="close-button" onClick={closeModal}>X</span>
-      <a href={`/events/${selectedEvent.id}`} className="export-button">
-        <img src={DownloadBtn} alt="Download" />
-      </a>
-      <h3>{selectedEvent.title}</h3>
-      <p>Location: {selectedEvent.location}</p>
-      <p>Status: {selectedEvent.isBooked ? 'Booked' : 'Not Booked'}</p>
-      <a href={`/events/${selectedEvent.id}`}>Event Page</a>
+      <span className="close-button" onClick={closeModal}>
+        <img src={DownloadBtn} alt="Download"/>
+        <img src={CloseBtn} alt="Close" />
+      </span>
+      <h3 className="event-title">{selectedEvent.title}</h3>
+      <p className="event-details">Location: {selectedEvent.location}</p>
+      <p className="event-details">Status: {selectedEvent.isBooked ? 'Booked' : 'Not Booked'}</p>
+      <a href={`/events/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
     </div>
   </div>
 )}

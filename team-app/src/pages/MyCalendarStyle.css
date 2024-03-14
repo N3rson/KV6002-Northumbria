@@ -31,7 +31,7 @@
 .close-button,
 .export-button {
   position: absolute;
-  top: 10px;
+  top: 5%;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -39,14 +39,50 @@
 }
 
 .close-button {
-  right: 10px;
+  right: 5%;
 }
 
 .export-button {
-  right: 40px; /* Adjust the distance from the right */
+  right: 10%; /* Adjust the distance from the right */
 }
 
+.close-button img,
 .export-button img {
-  width: 100%; /* Make the image fill the button */
-  height: 100%;
+  width: 24px; /* Adjust the width as needed */
+  height: 24px; /* Adjust the height as needed */
 }
+
+.event-details-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    height: auto;
+    max-height: 80%;
+    background-color: white;
+    padding: 1rem;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    margin: auto;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+  }
+  
+  .event-title {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .event-details {
+    text-align: center;
+  }
+  
+  .visit-event-link {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    color: blue;
+  }
