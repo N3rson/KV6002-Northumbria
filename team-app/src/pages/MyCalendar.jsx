@@ -17,6 +17,7 @@ function MyCalendar() {
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventBooked, setIsEventBooked] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState (null);
   const modalRef = useRef(null);
   
   useEffect(() => {
@@ -82,6 +83,7 @@ function MyCalendar() {
     bookingsSnapshot.forEach((doc) => {
       console.log("Booking document:", doc.data())
       if (doc.data().EventId === EventId) {
+        setSelectedBooking(doc.data())
         setIsEventBooked(true)
         return;
       }
@@ -127,11 +129,15 @@ function MyCalendar() {
               </span>
               <h3 className="event-title">{selectedEvent.title}</h3>
               <p className="event-details">Location: {selectedEvent.location}</p>
-              <p className="event-details">Status: {isEventBooked ? 'Booked' : 'Not Booked'}</p>
-              {isEventBooked && (
-                <p className="event-details">You have booked this event</p>
+              {isEventBooked && selectedBooking ? (
+                <div>
+                  <p className="event-details">You have booked this event</p>
+                  <a href={`/kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
+                </div>
+              ): (
+                <a href={`/kv6002/event/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
               )}
-              <a href={`/events/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
+              
             </div>
           </div>
         )}
