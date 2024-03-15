@@ -95,7 +95,6 @@ function EventInfo() {
             userId: currentUser.uid
         });
     
-        setSelectedBookings(bookingsToAdd);
 
         const ticketsRef = collection(waitingListDocRef, 'Tickets');
         for (let i = 0; i < bookingsToAdd; i++) {
