@@ -11,46 +11,33 @@ function EventInfo() {
     const [event, setEvent] = useState(null);
     const [selectedBookings, setSelectedBookings] = useState(1);
     const [errorMessage, setErrorMessage] = useState('');
-    const [alreadyJoined, setAlreadyJoined] = useState(false);
     const { eventId } = useParams();
     const navigate = useNavigate();
     const currentUser = auth.currentUser;
 
     useEffect(() => {
         const fetchEventData = async () => {
-            const eventRef = doc(firestore, 'Events', eventId)
-            const eventSnapshot = await getDoc(eventRef)
+            const eventRef = doc(firestore, 'Events', eventId);
+            const eventSnapshot = await getDoc(eventRef);
             if (eventSnapshot.exists()) {
-                setEvent(eventSnapshot.data())
-            } else {
-                console.error('Event not found')
+                setEvent(eventSnapshot.data());
             }
-        }
-
-        const checkIfAlreadyJoined = async () => {
-            if (currentUser) {
-                const currentUserId = currentUser.uid;
-                const bookingsQuery = query(collection(firestore, 'Bookings'), where('EventId', '==', eventId), where('userId', '==', currentUserId))
-                const waitingListQuery = query(collection(firestore, 'WaitingList'), where('EventId', '==', eventId), where('userId', '==', currentUserId))
-            
-                const bookingsSnapshot = await getDocs(bookingsQuery);
-                const waitingListSnapshot = await getDocs(waitingListQuery);
-            
-                if (bookingsSnapshot.size > 0 || waitingListSnapshot.size > 0) {
-                    setAlreadyJoined(true);
-                }
+            else {
+                 console.error('Event not found');
             }
         }
 
         fetchEventData();
-        checkIfAlreadyJoined();
-    }, [eventId, currentUser])
+    }, [eventId]);
+
+    
 
     if (!event) {
         return <div>Loading...</div>
     }
 
-    const handleJoinWaitingList = async (bookingsToAdd) => {
+
+    const handleBookClick = async (bookingsToAdd) => {
         if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
             setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
             return;
@@ -70,7 +57,36 @@ function EventInfo() {
             EventAttendance: prevEvent.EventAttendance + bookingsToAdd
         }));
     
-        const waitingListRef = collection(firestore, 'WaitingList')
+        const bookingsRef = collection(firestore, 'Bookings')
+        const bookingsDocRef = await addDoc(bookingsRef, {
+            EventId: eventRef.id,
+            EventName: event.EventName,
+            EventAddress: event.EventAddress,
+            EventDate: event.EventDate,
+            EventTime: event.EventTime,
+            EventLocation: event.EventLocation,
+            NumberOfTickets: bookingsToAdd,
+            userId: currentUser.uid
+        })
+    
+        setSelectedBookings(bookingsToAdd);
+        
+    
+        const ticketsRef = collection(bookingsDocRef, 'Tickets')
+        for (let i = 0; i < bookingsToAdd; i++) {
+            await addDoc(ticketsRef, {})
+        }
+
+    };
+
+    const handleWaitlistClick = async (bookingsToAdd) => {
+
+        const eventRef = doc(firestore, 'Events', eventId);
+        await updateDoc(eventRef, {
+            EventAttendance: increment(bookingsToAdd)
+        });
+
+        const waitingListRef = collection(firestore, 'WaitingList');
         const waitingListDocRef = await addDoc(waitingListRef, {
             EventId: eventRef.id,
             EventName: event.EventName,
@@ -78,21 +94,21 @@ function EventInfo() {
             EventDate: event.EventDate,
             EventTime: event.EventTime,
             EventLocation: event.EventLocation,
-            Places: bookingsToAdd,
+            NumberOfTickets: selectedBookings,
             userId: currentUser.uid
-        })
+        });
     
         setSelectedBookings(bookingsToAdd);
-    
-        const ticketsRef = collection(waitingListDocRef, 'Tickets')
+
+        const ticketsRef = collection(waitingListDocRef, 'Tickets');
         for (let i = 0; i < bookingsToAdd; i++) {
-            await addDoc(ticketsRef, {})
+            await addDoc(ticketsRef, {});
         }
     
-        alert("Added to waiting list. You will be required to confirm before attending the event.")
-    };
+        alert("Added to waiting list. You will be required to confirm before attending the event.");
+    }
 
-    const isJoinButtonDisabled = alreadyJoined || event.EventAttendance >= event.EventLimit
+    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
 
     return (
         <div>
@@ -121,7 +137,7 @@ function EventInfo() {
                 </div>
             </div>
             <div className='flex justify-center mt-5 flex-col items-center'>
-                {!isJoinButtonDisabled && (
+                {!isBookButtonDisabled && (
                     <>
                         <div className="flex items-center mb-2">
                             <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
@@ -136,11 +152,16 @@ function EventInfo() {
                             </select>
                         </div>
                         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                        <p className='text-sm mb-2'>Join the wait!</p>
-                        <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleJoinWaitingList(selectedBookings)}>Join</button>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
                     </>
                 )}
-                {isJoinButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20' disabled>Already Joined</button>}
+                {isBookButtonDisabled &&(
+                    <>
+                        {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Book</button>}
+                        <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
+                        <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
+                    </>
+                )}
             </div>
         </div>
       )

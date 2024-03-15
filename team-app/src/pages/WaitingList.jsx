@@ -71,7 +71,7 @@ function WaitingList() {
         <div>
             <img src={backBtn} alt="Back" className="h-6 w-6 ml-10" onClick={() => navigate(-1)} />
             <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black mr-10 ml-10'>Your Waiting List</h1>
-            <h2 className='text-sm m-10'>Events will be deleted accordingly if bookings are not confirmed on time!</h2>
+            <h2 className='text-sm m-10'>This is where you are reserving spots in case someone frees some!</h2>
             <ul className='ml-10 mr-10 mt-10'>
                 {waitingList.length > 0 ? (
                     waitingList.map((item, index) => (
@@ -87,7 +87,7 @@ function WaitingList() {
                                 <p className="text-sm">{item.EventDate} at {item.EventTime}</p>
                                 <p className='text-sm'>{item.EventAddress}</p>
                                 <p className="text-sm">{item.EventLocation}</p>
-                                <p className='text-sm'>Joined with tickets: {item.Places}</p>
+                                <p className='text-sm'>Joined with tickets: {item.NumberOfTickets}</p>
                             </div>
                         </li>
                     ))
