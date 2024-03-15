@@ -82,9 +82,6 @@ function EventInfo() {
     const handleWaitlistClick = async (bookingsToAdd) => {
 
         const eventRef = doc(firestore, 'Events', eventId);
-        await updateDoc(eventRef, {
-            EventAttendance: increment(bookingsToAdd)
-        });
 
         const waitingListRef = collection(firestore, 'WaitingList');
         const waitingListDocRef = await addDoc(waitingListRef, {
