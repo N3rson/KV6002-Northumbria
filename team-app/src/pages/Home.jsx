@@ -41,7 +41,11 @@ function Home() {
       
       <div className="flex flex-row">
         <h2 className="font-semibold">My Weekly Events</h2>
-        <SeeAllButton/>
+        <div className="ml-auto">
+          <Link to={'/bookings'}>
+            <SeeAllButton/>
+          </Link>
+        </div>
       </div>
       <div className='mb-3'>
         <Flicking
@@ -52,7 +56,7 @@ function Home() {
           }}>
 
           {events.length === 0 ? (
-              <h1 className='flex justify-center mt-20'>No Events to show</h1>
+              <h1 className='flex justify-center mt-2'>No Events to show</h1>
               ) : (
                 
                 events.map(event => (
@@ -75,7 +79,11 @@ function Home() {
 
       <div className="flex flex-row">
         <h2 className="font-semibold">Available Weekly Events</h2>
-        <SeeAllButton/>
+        <div className="ml-auto">
+          <Link to={{pathname: '/events', query: {dateFilter: 'weekly'} }}>
+            <SeeAllButton/>
+          </Link>
+        </div>
       </div>
       <div className='mb-3'>
         <Flicking
@@ -86,7 +94,7 @@ function Home() {
           }}>
 
           {events.length === 0 ? (
-              <h1 className='flex justify-center mt-20'>No Events to show</h1>
+              <h1 className='flex justify-center mt-2'>No Events to show</h1>
               ) : (
                 
                 events.map(event => (
@@ -109,7 +117,11 @@ function Home() {
 
       <div className="flex flex-row">
         <h2 className="font-semibold">Popular Events</h2>
-        <SeeAllButton/>
+        <div className="ml-auto">
+          <Link to={{pathname: '/events', query: {category: 'Popular'} }}>
+            <SeeAllButton/>
+          </Link>
+        </div>
       </div>
       <div className='mb-3'>
         <Flicking
@@ -120,7 +132,7 @@ function Home() {
           }}>
 
           {events.length === 0 ? (
-              <h1 className='flex justify-center mt-20'>No Events to show</h1>
+              <h1 className='flex justify-center mt-2'>No Events to show</h1>
               ) : (
                 
                 events.map(event => (
