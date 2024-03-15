@@ -58,6 +58,12 @@ function EventInfo() {
 
 
     const handleBookClick = async (bookingsToAdd) => {
+
+        if (isAlreadyInWaitingList) {
+            alert("You are already in the waiting list for this event.");
+            return;
+        }
+
         if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
             setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
             return;
