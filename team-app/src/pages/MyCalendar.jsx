@@ -16,6 +16,8 @@ function MyCalendar() {
 
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isEventBooked, setIsEventBooked] = useState(false);
+  const modalRef = useRef(null);
   
   useEffect(() => {
     const fetchEvents = async () => {
@@ -30,16 +32,12 @@ function MyCalendar() {
           const eventDateString = doc.data().EventDate;
           const eventTimeString = doc.data().EventTime;
 
-          // Split EventDate into month, day, and year components
           const [month, day, year] = eventDateString.split('/');
-
-          // Split EventTime into hour and minute components
           const [hour, minute] = eventTimeString.split(':');
 
-          // Create a new Date object using year, month (subtract 1 as months are zero-indexed), day, hour, and minute
           const startDate = new Date(year, month - 1, day, hour, minute);
           
-          //no longer need console.log issue has been resolved
+          //no longer need console.log issue has been resolved with above code
           //console.log('startDate:'), startDate;
 
           // Calculate event duration from EventLength
@@ -54,16 +52,16 @@ function MyCalendar() {
           const location = `${doc.data().EventAddress}, ${doc.data().EventLocation}`;
 
 
-          const eventdata = {
+          const eventData = {
+            id: doc.id,
             title: doc.data().EventName,
             start: startDate,
             end: endDate,
-            location: doc.data().EventAddress,
+            location: location,
             // eventPageLink: '/events/${doc.id}', 
             // to be adjusted to route to events page
-
           }
-          eventsData.push(eventdata)
+          eventsData.push(eventData)
         })
         setCalendarEvents(eventsData)
     }
@@ -73,24 +71,39 @@ function MyCalendar() {
   }, [])
   
   const handleEventClick = (event) => {
-    setSelectedEvent(event);
+    setSelectedEvent(event)
+    checkEventBooking(event.id)
+  };
+
+  const checkEventBooking = async (EventId) => {
+    console.log("Checking event booking for event ID:", EventId)
+    const bookingsCollection = collection(firestore, 'Bookings')
+    const bookingsSnapshot = await getDocs(bookingsCollection)
+    bookingsSnapshot.forEach((doc) => {
+      console.log("Booking document:", doc.data())
+      if (doc.data().EventId === EventId) {
+        setIsEventBooked(true)
+        return;
+      }
+    })
   };
 
   const closeModal = () => {
-    setSelectedEvent(null);
+    setSelectedEvent(null)
+    setIsEventBooked(false)
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setSelectedEvent(null); // Close the modal
+        closeModal()
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside)
     };
   }, []);
 
@@ -106,19 +119,22 @@ function MyCalendar() {
         />
         
         {selectedEvent && (
-  <div className="blurred-background">
-    <div className="event-details-modal" > {/* ref={modalRef}> to define? */}
-      <span className="close-button" onClick={closeModal}>
-        <img src={DownloadBtn} alt="Download"/>
-        <img src={CloseBtn} alt="Close" />
-      </span>
-      <h3 className="event-title">{selectedEvent.title}</h3>
-      <p className="event-details">Location: {selectedEvent.location}</p>
-      <p className="event-details">Status: {selectedEvent.isBooked ? 'Booked' : 'Not Booked'}</p>
-      <a href={`/events/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
-    </div>
-  </div>
-)}
+          <div className="blurred-background">
+            <div className="event-details-modal" ref={modalRef}>
+              <span className="close-button" onClick={closeModal}>
+                <img src={DownloadBtn} alt="Download"/>
+                <img src={CloseBtn} alt="Close" />
+              </span>
+              <h3 className="event-title">{selectedEvent.title}</h3>
+              <p className="event-details">Location: {selectedEvent.location}</p>
+              <p className="event-details">Status: {isEventBooked ? 'Booked' : 'Not Booked'}</p>
+              {isEventBooked && (
+                <p className="event-details">You have booked this event</p>
+              )}
+              <a href={`/events/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
+            </div>
+          </div>
+        )}
 
       </div>
     );
