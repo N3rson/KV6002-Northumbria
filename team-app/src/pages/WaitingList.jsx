@@ -26,16 +26,12 @@ function WaitingList() {
         fetchWaitingList()
     }, [])
 
-    const handleRemoveItem = async (id, places) => {
-        const waitingListItem = waitingList.find(item => item.id === id)
-        const eventRef = doc(firestore, 'Events', waitingListItem.EventId)
-        const eventSnapshot = await getDoc(eventRef)
-        const eventData = eventSnapshot.data()
-        const updatedEventAttendance = eventData.EventAttendance - places
-
-        await updateDoc(eventRef, {
-            EventAttendance: updatedEventAttendance
-        })
+    const handleRemoveItem = async (id) => {
+        const ticketsRef = collection(firestore, 'WaitingList', id, 'Tickets')
+        const ticketsQuerySnapshot = await getDocs(ticketsRef);
+        ticketsQuerySnapshot.forEach(async (doc) => {
+            await deleteDoc(doc.ref);
+        });
 
         await deleteDoc(doc(firestore, 'WaitingList', id))
         setWaitingList(waitingList.filter(item => item.id !== id))
@@ -46,6 +42,14 @@ function WaitingList() {
         const currentUserId = currentUser.uid
         
         const waitingListItem = waitingList.find(item => item.id === id)
+        const eventRef = doc(firestore, 'Events', waitingListItem.EventId)
+        const eventSnapshot = await getDoc(eventRef)
+        const eventData = eventSnapshot.data()
+        if (eventData.EventAttendance >= eventData.EventLimit) {
+            alert("Sorry, the event is already full. You cannot confirm your booking.");
+            return;
+        }
+
         const bookingsRef = collection(firestore, 'Bookings')
         const bookingDocRef = await addDoc(bookingsRef, {
             EventId: waitingListItem.EventId,
@@ -54,18 +58,19 @@ function WaitingList() {
             EventDate: waitingListItem.EventDate,
             EventTime: waitingListItem.EventTime,
             EventLocation: waitingListItem.EventLocation,
-            NumberOfTickets: waitingListItem.Places,
+            NumberOfTickets: waitingListItem.NumberOfTickets,
             userId: currentUserId
         })
     
         const ticketsRef = collection(bookingDocRef, 'Tickets')
-        for (let i = 0; i < waitingListItem.Places; i++) {
+        for (let i = 0; i < waitingListItem.NumberOfTickets; i++) {
             await addDoc(ticketsRef, {})
         }
     
         await deleteDoc(doc(firestore, 'WaitingList', id))
         setWaitingList(waitingList.filter(item => item.id !== id))
     }
+
 
     return (
         <div>
@@ -77,9 +82,9 @@ function WaitingList() {
                     waitingList.map((item, index) => (
                         <li key={index} className="py-2 bg-white p-4 rounded-lg shadow-middle flex items-center justify-between mt-5">
                             <div>
-                            <button onClick={() => handleRemoveItem(item.id, item.Places)}>
+                            <button onClick={() => handleRemoveItem(item.id)}>
                                 <img src={removeBtn} alt='Remove' className='h-7 w-7'></img>
-                            </button>
+                            </button >
                                 <button onClick={() => handleConfirmBooking(item.id)}>
                                     <img src={confirmBtn} alt='Confirm' className='h-7 w-7 ml-4'></img>
                                 </button>

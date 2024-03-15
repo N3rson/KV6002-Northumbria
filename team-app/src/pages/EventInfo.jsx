@@ -12,6 +12,8 @@ function EventInfo() {
     const [selectedBookings, setSelectedBookings] = useState(1);
     const [errorMessage, setErrorMessage] = useState('');
     const { eventId } = useParams();
+    const [isAlreadyBooked, setIsAlreadyBooked] = useState(false);
+    const [isAlreadyInWaitingList, setIsAlreadyInWaitingList] = useState(false);
     const navigate = useNavigate();
     const currentUser = auth.currentUser;
 
@@ -29,6 +31,24 @@ function EventInfo() {
 
         fetchEventData();
     }, [eventId]);
+
+    useEffect(() => {
+        const checkBookingStatus = async () => {
+            if (currentUser) {
+                const bookingsRef = collection(firestore, 'Bookings');
+                const userBookingQuery = query(bookingsRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId));
+                const bookingSnapshot = await getDocs(userBookingQuery);
+                setIsAlreadyBooked(!bookingSnapshot.empty);
+
+                const waitingListRef = collection(firestore, 'WaitingList');
+                const userWaitingListQuery = query(waitingListRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId));
+                const waitingListSnapshot = await getDocs(userWaitingListQuery);
+                setIsAlreadyInWaitingList(!waitingListSnapshot.empty);
+            }
+        };
+
+        checkBookingStatus();
+    }, [eventId, currentUser]);
 
     
 
@@ -133,31 +153,41 @@ function EventInfo() {
                 </div>
             </div>
             <div className='flex justify-center mt-5 flex-col items-center'>
-                {!isBookButtonDisabled && (
-                    <>
-                        <div className="flex items-center mb-2">
-                            <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
-                            <select
-                                id="ticketCount"
-                                value={selectedBookings}
-                                onChange={(e) => setSelectedBookings(Number(e.target.value))}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5">
-                                {[1,2,3,4,5].map(number => (
-                                    <option key={number} value={number}>{number}</option>
-                                ))}
-                            </select>
-                        </div>
-                        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
-                    </>
-                )}
-                {isBookButtonDisabled &&(
-                    <>
-                        {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Book</button>}
-                        <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
-                        <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
-                    </>
-                )}
+                <div className="flex items-center mb-2">
+                        <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
+                        <select
+                            id="ticketCount"
+                            value={selectedBookings}
+                            onChange={(e) => setSelectedBookings(Number(e.target.value))}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5">
+                            {[1,2,3,4,5].map(number => (
+                                <option key={number} value={number}>{number}</option>
+                            ))}
+                        </select>
+                    </div>
+                        {!isBookButtonDisabled && !isAlreadyBooked && (
+                            <>
+                                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
+                            </>
+                        )}
+                        {isAlreadyBooked && (
+                            <>
+                                <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Already Booked</button>
+                            </>
+                        )}
+                        {isBookButtonDisabled && !isAlreadyBooked && (
+                            <>
+                                <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Booking Full</button>
+                                <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
+                                {!isAlreadyInWaitingList && (
+                                    <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
+                                )}
+                                {isAlreadyInWaitingList && (
+                                    <button className="bg-gray-400 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" disabled>Joined</button>
+                                )}
+                            </>
+                        )}
             </div>
         </div>
       )
