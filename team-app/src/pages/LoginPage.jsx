@@ -12,7 +12,7 @@ const LoginPage = () => {
     event.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/Home'); // Redirect to the home page
+      navigate('/');
     } catch (error) {
       console.error("Login failed:", error);
     }

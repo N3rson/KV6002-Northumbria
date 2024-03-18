@@ -2,7 +2,7 @@ import React from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as SignOutIcon } from '../assets/sign-out-icon.png'; // Path to your icon
+import SignOutIcon from '../assets/sign-out-icon.png'; // Change this line
 
 const SignOutButton = () => {
   const navigate = useNavigate();
@@ -18,8 +18,7 @@ const SignOutButton = () => {
 
   return (
     <button onClick={handleSignOut}>
-      <SignOutIcon />
-      <span>Sign Out</span>
+      <img src={SignOutIcon} alt="SignOut" className="h-6 w-6" />
     </button>
   );
 };
