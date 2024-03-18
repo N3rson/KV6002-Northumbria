@@ -1,35 +1,35 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (event) => {
+    event.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCredential.user);
-      alert("Logged in successfully!");
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/Home'); // Redirect to the home page
     } catch (error) {
-      alert(error.message);
+      console.error("Login failed:", error);
     }
   };
-  
 
   return (
     <div>
       <form onSubmit={handleLogin}>
-        <label>Email:</label>
         <input
           type="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <label>Password:</label>
         <input
           type="password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
