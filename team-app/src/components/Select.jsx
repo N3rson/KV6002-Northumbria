@@ -1,3 +1,13 @@
+
+/**
+ * Select Component
+ * 
+ * This can be re-used to create a select dropdown with options and appropriate styling automatically
+ * 
+ * @category Component
+ * @author Pawel Lasota
+*/
+
 function Select(props){
 
     return (

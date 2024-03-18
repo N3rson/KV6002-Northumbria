@@ -1,21 +1,32 @@
 import { firestore } from '../firebaseConfig'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
-import { Link } from 'react-router-dom';
-import { auth } from '../firebaseConfig';
+import { Link } from 'react-router-dom'
+import { auth } from '../firebaseConfig'
+
+/**
+ * BookedEventInfo Page
+ * 
+ * This page is responsible for displaying the user's booked event information. It allows the user to cancel the entire booking.
+ * 
+ * @category Page
+ * @author Pawel Lasota
+ * @generated fetchBookingsData assisted by chatGPT
+*/
 
 function Bookings() {
 
   const [bookings, setBookings] = useState([])
-  const currentUser = auth.currentUser;
-  let navigate = useNavigate();
+  const currentUser = auth.currentUser
+  let navigate = useNavigate()
 
   useEffect(() => {
+    //Responsible for fetching the logged in user's booking data from the database
     const fetchBookings = async () => {
         try {
             const bookingsCollection = collection(firestore, 'Bookings')
-            const userBookingsQuery = query(bookingsCollection, where("userId", "==", currentUser.uid));
+            const userBookingsQuery = query(bookingsCollection, where("userId", "==", currentUser.uid))
             const bookingsSnapshot = await getDocs(userBookingsQuery)
             const bookingsData = bookingsSnapshot.docs.map(doc => ({
                 id: doc.id,
@@ -27,15 +38,18 @@ function Bookings() {
             console.error('Error fetching bookings: ', error)
         }
     }
+    //if the user is logged in then the bookings are fetched
     if (currentUser) {
-      fetchBookings();
-  }
-}, [currentUser]);
+      fetchBookings()
+    }
+  }, [currentUser])
 
+  //Responsible for redirecting the user to the waiting list page
   const handleReserveAccess = () => {
-    navigate('/waitinglist/');
-};
+    navigate('/waitinglist/')
+  }
 
+  //JSX to display the bookings list appropriately
     return (
       <div>
         <div className='flex justify-center'>

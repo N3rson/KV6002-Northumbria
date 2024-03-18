@@ -4,12 +4,23 @@ import { firestore } from '../firebaseConfig'
 import Select from '../components/Select'
 import { Link } from 'react-router-dom';
 
+/**
+ * Events Page
+ * 
+ * This page is responsible for displaying all the events. It allows the user to filter events by category.
+ * 
+ * @category Page
+ * @author Karol Fryc
+*/
+
+
 function Events() {
     const [events, setEvents] = useState([])
     const [categories, setCategories] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('')
 
     useEffect(() => {
+        //fetching events from the database
         const fetchEvents = async () => {
             try {
                 const eventsCollection = collection(firestore, 'Events')
@@ -24,6 +35,7 @@ function Events() {
             }
         }
 
+        //fetching categories from the database
         const fetchCategories = async () => {
             try {
                 const categoriesCollection = collection(firestore, 'Categories')
@@ -42,15 +54,15 @@ function Events() {
         fetchCategories()
     }, [])
 
+    //Responsible for filtering the events by category
     const handleSelectCategory = (event) => {
         setSelectedCategory(event.target.value)
     }
-
     const selectedCategoryName = categories.find(category => category.id === selectedCategory)?.CategoryName;
-
     const filteredEvents = selectedCategoryName ?
         events.filter(event => event.EventCategory === selectedCategoryName) : events;
 
+    //JSX to display the events list appropriately and map each event to the correct category
     return (
         <div>
             <div>

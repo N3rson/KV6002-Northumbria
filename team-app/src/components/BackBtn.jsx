@@ -1,6 +1,15 @@
 import backBtn from '../assets/back_button.png';
 import { useNavigate  } from 'react-router-dom';
 
+/**
+ * BackBtn Component
+ * 
+ * This can be re-used as a back button on pages that need it
+ * 
+ * @category Component
+ * @author Pawel Lasota
+*/
+
 function BackBtn(){
     let navigate = useNavigate();
     

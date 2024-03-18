@@ -4,16 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
 import { Link } from 'react-router-dom';
-
-function SeeAllButton() {
-  return (
-    <div className="ml-auto px-4 py-0.5 rounded-xlg bg-colour2 border-2 border-colour2 hover:bg-buttonHover border-2 border-colour2">
-      <button>
-        <p>See All</p>
-      </button>
-    </div>
-  )
-}
+import SeeAllButton from '../components/SeeAllButton'
 
 function Home() {
   const [events, setEvents] = useState([])

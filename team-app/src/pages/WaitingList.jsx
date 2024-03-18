@@ -6,10 +6,21 @@ import backBtn from '../assets/back_button.png'
 import removeBtn from '../assets/icon_remove.png'
 import confirmBtn from '../assets/icon_confirm.png'
 
+/**
+ * WaitingList Page
+ * 
+ * This Page is responsible for displaying the user's waiting list. It allows the user to remove items from the waiting list and confirm bookings.
+ * 
+ * @category Page
+ * @author Pawel Lasota
+ * @generated handleRemoveItem and handleConfirmBooking partially assisted by chatGPT
+*/
+
 function WaitingList() {
     const [waitingList, setWaitingList] = useState([])
     const navigate = useNavigate()
 
+    //Responsible for fetching the user's waiting list from the database for the logged in user
     useEffect(() => {
         const fetchWaitingList = async () => {
             const currentUser = auth.currentUser
@@ -26,32 +37,38 @@ function WaitingList() {
         fetchWaitingList()
     }, [])
 
+    //Responsible for removing an item from the WaitingList by cancelling the reservation
     const handleRemoveItem = async (id) => {
         const ticketsRef = collection(firestore, 'WaitingList', id, 'Tickets')
-        const ticketsQuerySnapshot = await getDocs(ticketsRef);
+
+        //loop to remove the tickets subcollection alongside the waitinglist item
+        const ticketsQuerySnapshot = await getDocs(ticketsRef)
         ticketsQuerySnapshot.forEach(async (doc) => {
-            await deleteDoc(doc.ref);
+            await deleteDoc(doc.ref)
         });
 
         await deleteDoc(doc(firestore, 'WaitingList', id))
         setWaitingList(waitingList.filter(item => item.id !== id))
     }
 
+    //Responsible for confirming a booking from the WaitingList and adding it to the confirmed bookings list
     const handleConfirmBooking = async (id) => {
-        const currentUser = auth.currentUser;
-        const currentUserId = currentUser.uid;
+        const currentUser = auth.currentUser
+        const currentUserId = currentUser.uid
     
-        const waitingListItem = waitingList.find(item => item.id === id);
-        const eventRef = doc(firestore, 'Events', waitingListItem.EventId);
-        const eventSnapshot = await getDoc(eventRef);
-        const eventData = eventSnapshot.data();
+        const waitingListItem = waitingList.find(item => item.id === id)
+        const eventRef = doc(firestore, 'Events', waitingListItem.EventId)
+        const eventSnapshot = await getDoc(eventRef)
+        const eventData = eventSnapshot.data()
     
+        //check if there are enough spaces for the amount of tickets
         if (eventData.EventAttendance + waitingListItem.NumberOfTickets > eventData.EventLimit) {
-            alert("Not enough spaces for the amount of tickets. Cannot confirm booking.");
-            return;
+            alert("Not enough spaces for the amount of tickets. Cannot confirm booking.")
+            return
         }
     
-        const bookingsRef = collection(firestore, 'Bookings');
+        //add the booking to the confirmed bookings list
+        const bookingsRef = collection(firestore, 'Bookings')
         const bookingDocRef = await addDoc(bookingsRef, {
             EventId: waitingListItem.EventId,
             EventName: waitingListItem.EventName,
@@ -61,21 +78,25 @@ function WaitingList() {
             EventLocation: waitingListItem.EventLocation,
             NumberOfTickets: waitingListItem.NumberOfTickets,
             userId: currentUserId
-        });
+        })
     
-        const ticketsRef = collection(bookingDocRef, 'Tickets');
+        //add the tickets to the booking
+        const ticketsRef = collection(bookingDocRef, 'Tickets')
         for (let i = 0; i < waitingListItem.NumberOfTickets; i++) {
-            await addDoc(ticketsRef, {});
+            await addDoc(ticketsRef, {})
         }
     
+        //update the event attendance
         await updateDoc(eventRef, {
             EventAttendance: increment(waitingListItem.NumberOfTickets)
         });
     
-        await deleteDoc(doc(firestore, 'WaitingList', id));
-        setWaitingList(waitingList.filter(item => item.id !== id));
+        ///remove item from the waiting list
+        await deleteDoc(doc(firestore, 'WaitingList', id))
+        setWaitingList(waitingList.filter(item => item.id !== id))
     }
 
+    //return responsible for displaying the information appropriately
     return (
         <div>
             <img src={backBtn} alt="Back" className="h-6 w-6 ml-10" onClick={() => navigate(-1)} />

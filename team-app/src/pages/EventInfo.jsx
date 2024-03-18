@@ -5,7 +5,16 @@ import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
 import downloadIcon from '../assets/icon_download.png';
 import shareIcon from '../assets/icon_share.png';
-import { auth } from '../firebaseConfig';
+import { auth } from '../firebaseConfig'
+
+/**
+ * EventInfo Page
+ * 
+ * This page is responsible for displaying the event information. It allows the user to book tickets for the event.
+ * 
+ * @category Page
+ * @author Karol Fryc, Pawel Lasota
+*/
 
 function EventInfo() {
     const [event, setEvent] = useState(null);
@@ -18,6 +27,7 @@ function EventInfo() {
     const currentUser = auth.currentUser;
 
     useEffect(() => {
+        //Responsible for fetching the event data from the database
         const fetchEventData = async () => {
             const eventRef = doc(firestore, 'Events', eventId);
             const eventSnapshot = await getDoc(eventRef);
@@ -34,41 +44,42 @@ function EventInfo() {
 
     useEffect(() => {
         const checkBookingStatus = async () => {
+            //Responsible for checking if the user is already booked for the event
             if (currentUser) {
-                const bookingsRef = collection(firestore, 'Bookings');
-                const userBookingQuery = query(bookingsRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId));
-                const bookingSnapshot = await getDocs(userBookingQuery);
-                setIsAlreadyBooked(!bookingSnapshot.empty);
-
-                const waitingListRef = collection(firestore, 'WaitingList');
-                const userWaitingListQuery = query(waitingListRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId));
-                const waitingListSnapshot = await getDocs(userWaitingListQuery);
-                setIsAlreadyInWaitingList(!waitingListSnapshot.empty);
+                const bookingsRef = collection(firestore, 'Bookings')
+                const userBookingQuery = query(bookingsRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId))
+                const bookingSnapshot = await getDocs(userBookingQuery)
+                setIsAlreadyBooked(!bookingSnapshot.empty)
+                //Responsible for checking if the user is already in the waiting list for the event
+                const waitingListRef = collection(firestore, 'WaitingList')
+                const userWaitingListQuery = query(waitingListRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId))
+                const waitingListSnapshot = await getDocs(userWaitingListQuery)
+                setIsAlreadyInWaitingList(!waitingListSnapshot.empty)
             }
-        };
+        }
 
-        checkBookingStatus();
-    }, [eventId, currentUser]);
+        checkBookingStatus()
+    }, [eventId, currentUser])
 
     
-
+    //if there is no event at the beginning then the loading message is displayed
     if (!event) {
         return <div>Loading...</div>
     }
 
-
+    //Responsible for booking the tickets for the event and updating the database
     const handleBookClick = async (bookingsToAdd) => {
-
+        //Responsible for checking if the user is already booked for the event
         if (isAlreadyInWaitingList) {
             alert("You are already in the waiting list for this event.");
             return;
         }
-
+        //Responsible for checking if the user is already booked for the event
         if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
             setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
             return;
         }
-    
+        //Confirmation dialog to ensure the user wants to book the tickets
         const confirmBooking = window.confirm('Are you sure you want to book ' + bookingsToAdd + ' ticket/s?');
         if (!confirmBooking) {
             return;
@@ -78,11 +89,13 @@ function EventInfo() {
         await updateDoc(eventRef, {
             EventAttendance: increment(bookingsToAdd)
         });
+
         setEvent(prevEvent => ({
             ...prevEvent,
             EventAttendance: prevEvent.EventAttendance + bookingsToAdd
         }));
     
+        //Responsible for adding the booking to the database
         const bookingsRef = collection(firestore, 'Bookings')
         const bookingsDocRef = await addDoc(bookingsRef, {
             EventId: eventRef.id,
@@ -97,18 +110,18 @@ function EventInfo() {
     
         setSelectedBookings(bookingsToAdd);
         
-    
+        //Responsible for adding the tickets to the booking
         const ticketsRef = collection(bookingsDocRef, 'Tickets')
         for (let i = 0; i < bookingsToAdd; i++) {
             await addDoc(ticketsRef, {})
         }
 
-    };
+    }
 
+    //Responsible for adding the user to the waiting list for the event and updating the database
     const handleWaitlistClick = async (bookingsToAdd) => {
 
         const eventRef = doc(firestore, 'Events', eventId);
-
         const waitingListRef = collection(firestore, 'WaitingList');
         const waitingListDocRef = await addDoc(waitingListRef, {
             EventId: eventRef.id,
@@ -122,6 +135,7 @@ function EventInfo() {
         });
     
 
+        //Responsible for adding the tickets to the waiting list
         const ticketsRef = collection(waitingListDocRef, 'Tickets');
         for (let i = 0; i < bookingsToAdd; i++) {
             await addDoc(ticketsRef, {});
@@ -130,8 +144,10 @@ function EventInfo() {
         alert("Added to waiting list. You will be required to confirm before attending the event.");
     }
 
+    //constant to disable book button if attendance limit is reached
     const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
 
+    //JSX to display the event information
     return (
         <div>
             <img src={backBtn} alt="Back" className="h-6 w-6 ml-10" onClick={() => navigate(-1)} />
@@ -171,24 +187,29 @@ function EventInfo() {
                             ))}
                         </select>
                     </div>
+                        {/*Checking if the button is not disabled and if the event is not booked then enable the button*/}
                         {!isBookButtonDisabled && !isAlreadyBooked && (
                             <>
                                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
                             </>
                         )}
+                        {/*Checking if the event is already booked and disabling the button*/}
                         {isAlreadyBooked && (
                             <>
                                 <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Already Booked</button>
                             </>
                         )}
+                        {/*Checking if the booking is full and disabling the button if it is*/}
                         {isBookButtonDisabled && !isAlreadyBooked && (
                             <>
                                 <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Booking Full</button>
                                 <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
+                                {/*Enabling the waiting list button if the booking is full*/}
                                 {!isAlreadyInWaitingList && (
                                     <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
                                 )}
+                                {/*Disabling the waiting list button if the user is already in the waiting list*/}
                                 {isAlreadyInWaitingList && (
                                     <button className="bg-gray-400 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" disabled>Joined</button>
                                 )}

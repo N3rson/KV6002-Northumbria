@@ -5,6 +5,15 @@ import calendar_icon from '../assets/icon_calendar.png';
 import booking_icon from '../assets/icon_booking.png';
 import event_icon from '../assets/icon_event.png';
 
+/**
+ * Navbar Component
+ * 
+ * This is used for the bottom navigation bar that is present on all pages.
+ * 
+ * @category Component
+ * @author Team
+*/
+
 const Navbar = () => {
   const location = useLocation();
   const currentPath = location.pathname;

@@ -1,54 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate  } from 'react-router-dom';
-import { doc, getDoc, deleteDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
-import { firestore } from '../firebaseConfig';
-import rightArrow from '../assets/icon_arrow_right_white.png';
-import BackBtn from '../components/BackBtn';
-import TicketInfo from './TicketInfo'; 
+import React, { useState, useEffect } from 'react'
+import { useParams, Link, useNavigate  } from 'react-router-dom'
+import { doc, getDoc, deleteDoc, updateDoc, collection, getDocs } from 'firebase/firestore'
+import { firestore } from '../firebaseConfig'
+import rightArrow from '../assets/icon_arrow_right_white.png'
+import BackBtn from '../components/BackBtn'
+
+/**
+ * BookedEventInfo Page
+ * 
+ * This page is responsible for displaying the user's booked event information. It allows the user to cancel the entire booking.
+ * 
+ * @category Page
+ * @author Pawel Lasota
+ * @generated fetchBookingsData assisted by chatGPT
+*/
 
 function BookedEventInfo() {
-    const [booking, setBooking] = useState(null);
-    const { bookingId } = useParams();
-    const [tickets, setTickets] = useState([]);
+    const [booking, setBooking] = useState(null)
+    const { bookingId } = useParams()
+    const [tickets, setTickets] = useState([])
     let ticketNumber = 1
-    let navigate = useNavigate();
+    let navigate = useNavigate()
 
     useEffect(() => {
+        //Responsible for fetching the user's booking data from the database
         const fetchBookingsData = async () => {
             try {
-                const bookingRef = doc(firestore, 'Bookings', bookingId);
-                const bookingsSnapshot = await getDoc(bookingRef);
+                //referencing the booking document in the database
+                const bookingRef = doc(firestore, 'Bookings', bookingId)
+                const bookingsSnapshot = await getDoc(bookingRef)
                 if (bookingsSnapshot.exists()) {
                     setBooking(bookingsSnapshot.data());
-                    const ticketsRef = collection(bookingRef, 'Tickets');
-                    const querySnapshot = await getDocs(ticketsRef);
-                    const ticketsData = [];
+                    const ticketsRef = collection(bookingRef, 'Tickets')
+                    const querySnapshot = await getDocs(ticketsRef)
+                    const ticketsData = []
+                    //loop to fetch the tickets subcollection for the booking
                     querySnapshot.forEach((doc) => {
-                        ticketsData.push({ id: doc.id, ...doc.data() });
-                    });
-                    setTickets(ticketsData);
+                        ticketsData.push({ id: doc.id, ...doc.data() })
+                    })
+                    setTickets(ticketsData)
                 } else {
-                    console.error('Event not found');
+                    console.error('Event not found')
                 }
             } catch (error) {
-                console.error('Error fetching event data: ', error);
+                console.error('Error fetching event data: ', error)
             }
-        };
-        fetchBookingsData();
-    }, [bookingId]);
+        } 
+        fetchBookingsData()
+    }, [bookingId])
 
+    //if there is no booking at the beginning then the loading message is displayed
     if (!booking) {
         return <div>Loading...</div>
     }
 
+    //Responsible for cancelling the entire booking and updating the database
     const handleCancelBooking = async () => {
         try {
+            //Confirmation dialog to ensure the user wants to cancel the booking
             const confirmed = window.confirm("Are you sure you want to cancel this booking?")
             if(confirmed){
+                //referencing the booking and event documents in the database
                 const bookingRef = doc(firestore, 'Bookings', bookingId)
                 const bookingSnapshot = await getDoc(bookingRef)
                 const bookingData = bookingSnapshot.data()
         
+                //updating the attendance upon booking cancellation
                 const eventRef = doc(firestore, 'Events', bookingData.EventId)
                 const eventSnapshot = await getDoc(eventRef)
                 const eventData = eventSnapshot.data()
@@ -59,24 +76,24 @@ function BookedEventInfo() {
                 })
                 await deleteDoc(bookingRef)
 
-                const ticketsRef = collection(bookingRef, 'Tickets');
-
-                const querySnapshot = await getDocs(ticketsRef);
+                //loop to remove the tickets subcollection alongside the booking
+                const ticketsRef = collection(bookingRef, 'Tickets')
+                const querySnapshot = await getDocs(ticketsRef)
                 querySnapshot.forEach(async (doc) => {
-                    await deleteDoc(doc.ref);
+                    await deleteDoc(doc.ref)
                 });
 
-
+                //return the user back to bookings
                 navigate('/bookings')
             }else{
                 window.alert('Booking was not cancelled')
-            }
-            
+            } 
         } catch (error) {
             console.error('Error canceling booking: ', error)
         }
     }
 
+    //JSX to display the booked event information
     return (
       <div>
             <BackBtn />
