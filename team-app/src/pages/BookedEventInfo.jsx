@@ -11,7 +11,7 @@ import BackBtn from '../components/BackBtn'
  * This page is responsible for displaying the user's booked event information. It allows the user to cancel the entire booking.
  * 
  * @category Page
- * @author Pawel Lasota
+ * @author Pawel Lasota, Karol Fryc
  * @generated fetchBookingsData assisted by chatGPT
 */
 
