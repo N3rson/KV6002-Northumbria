@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, doc, getDoc, updateDoc, increment, addDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc, increment, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import backBtn from '../assets/back_button.png';
 import downloadIcon from '../assets/icon_download.png';
@@ -12,28 +12,58 @@ function EventInfo() {
     const [selectedBookings, setSelectedBookings] = useState(1);
     const [errorMessage, setErrorMessage] = useState('');
     const { eventId } = useParams();
-    let navigate = useNavigate();
-    const currentUser = auth.currentUser
+    const [isAlreadyBooked, setIsAlreadyBooked] = useState(false);
+    const [isAlreadyInWaitingList, setIsAlreadyInWaitingList] = useState(false);
+    const navigate = useNavigate();
+    const currentUser = auth.currentUser;
 
     useEffect(() => {
         const fetchEventData = async () => {
-            try {
-                const eventRef = doc(firestore, 'Events', eventId);
-                const eventSnapshot = await getDoc(eventRef);
-                if (eventSnapshot.exists()) {
-                    setEvent(eventSnapshot.data());
-                } else {
-                    console.error('Event not found');
-                }
-            } catch (error) {
-                console.error('Error fetching event data: ', error);
+            const eventRef = doc(firestore, 'Events', eventId);
+            const eventSnapshot = await getDoc(eventRef);
+            if (eventSnapshot.exists()) {
+                setEvent(eventSnapshot.data());
             }
-        };
+            else {
+                 console.error('Event not found');
+            }
+        }
 
         fetchEventData();
     }, [eventId]);
 
+    useEffect(() => {
+        const checkBookingStatus = async () => {
+            if (currentUser) {
+                const bookingsRef = collection(firestore, 'Bookings');
+                const userBookingQuery = query(bookingsRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId));
+                const bookingSnapshot = await getDocs(userBookingQuery);
+                setIsAlreadyBooked(!bookingSnapshot.empty);
+
+                const waitingListRef = collection(firestore, 'WaitingList');
+                const userWaitingListQuery = query(waitingListRef, where('userId', '==', currentUser.uid), where('EventId', '==', eventId));
+                const waitingListSnapshot = await getDocs(userWaitingListQuery);
+                setIsAlreadyInWaitingList(!waitingListSnapshot.empty);
+            }
+        };
+
+        checkBookingStatus();
+    }, [eventId, currentUser]);
+
+    
+
+    if (!event) {
+        return <div>Loading...</div>
+    }
+
+
     const handleBookClick = async (bookingsToAdd) => {
+
+        if (isAlreadyInWaitingList) {
+            alert("You are already in the waiting list for this event.");
+            return;
+        }
+
         if (event.EventLimit - event.EventAttendance < bookingsToAdd) {
             setErrorMessage('Not enough spaces for ' + bookingsToAdd + ' tickets.');
             return;
@@ -44,49 +74,63 @@ function EventInfo() {
             return;
         }
     
-        setErrorMessage('');
+        const eventRef = doc(firestore, 'Events', eventId);
+        await updateDoc(eventRef, {
+            EventAttendance: increment(bookingsToAdd)
+        });
+        setEvent(prevEvent => ({
+            ...prevEvent,
+            EventAttendance: prevEvent.EventAttendance + bookingsToAdd
+        }));
     
-        try {
-            const eventRef = doc(firestore, 'Events', eventId);
-            await updateDoc(eventRef, {
-                EventAttendance: increment(bookingsToAdd)
-            });
-            setEvent(prevEvent => ({
-                ...prevEvent,
-                EventAttendance: prevEvent.EventAttendance + bookingsToAdd
-            }));
+        const bookingsRef = collection(firestore, 'Bookings')
+        const bookingsDocRef = await addDoc(bookingsRef, {
+            EventId: eventRef.id,
+            EventName: event.EventName,
+            EventAddress: event.EventAddress,
+            EventDate: event.EventDate,
+            EventTime: event.EventTime,
+            EventLocation: event.EventLocation,
+            NumberOfTickets: bookingsToAdd,
+            userId: currentUser.uid
+        })
     
-            const bookingsRef = collection(firestore, 'Bookings');
-            const bookingDocRef = await addDoc(bookingsRef, {
-                EventId: eventRef.id,
-                EventName: event.EventName,
-                EventAddress: event.EventAddress,
-                EventDate: event.EventDate,
-                EventTime: event.EventTime,
-                EventLocation: event.EventLocation,
-                NumberOfTickets: bookingsToAdd,
-                userId: currentUser.uid 
-            });
+        setSelectedBookings(bookingsToAdd);
+        
     
-            const ticketsRef = collection(bookingDocRef, 'Tickets');
-    
-            for (let i = 0; i < bookingsToAdd; i++) {
-                await addDoc(ticketsRef, {});
-            }
-    
-            alert('Booking successful!');
-    
-        } catch (error) {
-            console.error('Error updating attendance: ', error);
-            setErrorMessage('An error occurred while booking. Please try again.');
+        const ticketsRef = collection(bookingsDocRef, 'Tickets')
+        for (let i = 0; i < bookingsToAdd; i++) {
+            await addDoc(ticketsRef, {})
         }
+
     };
 
-    if (!event) {
-        return <div>Loading...</div>
+    const handleWaitlistClick = async (bookingsToAdd) => {
+
+        const eventRef = doc(firestore, 'Events', eventId);
+
+        const waitingListRef = collection(firestore, 'WaitingList');
+        const waitingListDocRef = await addDoc(waitingListRef, {
+            EventId: eventRef.id,
+            EventName: event.EventName,
+            EventAddress: event.EventAddress,
+            EventDate: event.EventDate,
+            EventTime: event.EventTime,
+            EventLocation: event.EventLocation,
+            NumberOfTickets: selectedBookings,
+            userId: currentUser.uid
+        });
+    
+
+        const ticketsRef = collection(waitingListDocRef, 'Tickets');
+        for (let i = 0; i < bookingsToAdd; i++) {
+            await addDoc(ticketsRef, {});
+        }
+    
+        alert("Added to waiting list. You will be required to confirm before attending the event.");
     }
 
-    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit;
+    const isBookButtonDisabled = event.EventAttendance >= event.EventLimit
 
     return (
         <div>
@@ -115,25 +159,41 @@ function EventInfo() {
                 </div>
             </div>
             <div className='flex justify-center mt-5 flex-col items-center'>
-                {!isBookButtonDisabled && (
-                    <>
-                        <div className="flex items-center mb-2">
-                            <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
-                            <select
-                                id="ticketCount"
-                                value={selectedBookings}
-                                onChange={(e) => setSelectedBookings(Number(e.target.value))}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5">
-                                {[1,2,3,4,5].map(number => (
-                                    <option key={number} value={number}>{number}</option>
-                                ))}
-                            </select>
-                        </div>
-                        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleBookClick(selectedBookings)}>Book</button>
-                    </>
-                )}
-                {isBookButtonDisabled && <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-full' disabled>Book</button>}
+                <div className="flex items-center mb-2">
+                        <label htmlFor="ticketCount" className="mr-2 text-sm">Number of Tickets:</label>
+                        <select
+                            id="ticketCount"
+                            value={selectedBookings}
+                            onChange={(e) => setSelectedBookings(Number(e.target.value))}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5">
+                            {[1,2,3,4,5].map(number => (
+                                <option key={number} value={number}>{number}</option>
+                            ))}
+                        </select>
+                    </div>
+                        {!isBookButtonDisabled && !isAlreadyBooked && (
+                            <>
+                                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
+                            </>
+                        )}
+                        {isAlreadyBooked && (
+                            <>
+                                <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Already Booked</button>
+                            </>
+                        )}
+                        {isBookButtonDisabled && !isAlreadyBooked && (
+                            <>
+                                <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Booking Full</button>
+                                <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
+                                {!isAlreadyInWaitingList && (
+                                    <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
+                                )}
+                                {isAlreadyInWaitingList && (
+                                    <button className="bg-gray-400 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" disabled>Joined</button>
+                                )}
+                            </>
+                        )}
             </div>
         </div>
       )

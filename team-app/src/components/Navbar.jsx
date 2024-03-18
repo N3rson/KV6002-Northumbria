@@ -14,7 +14,7 @@ const Navbar = () => {
   const activeClass = "scale-150";
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white rounded-t-xlg shadow-middle">
+    <nav className="fixed bottom-0 left-0 w-full bg-white rounded-t-xlg shadow-middle z-50">
       <div className="flex justify-around p-4">
         {/* Sign Out Button, consider positioning */}
         <SignOutButton />
