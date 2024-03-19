@@ -83,6 +83,8 @@ function EventInfo() {
         const confirmBooking = window.confirm('Are you sure you want to book ' + bookingsToAdd + ' ticket/s?');
         if (!confirmBooking) {
             return;
+        }else{
+            navigate('/events');
         }
     
         const eventRef = doc(firestore, 'Events', eventId);
@@ -142,6 +144,7 @@ function EventInfo() {
         }
     
         alert("Added to waiting list. You will be required to confirm before attending the event.");
+        navigate('/events');
     }
 
     //constant to disable book button if attendance limit is reached
