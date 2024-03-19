@@ -108,7 +108,7 @@ function Home() {
       </div>
 
       <div className="flex flex-row">
-        <h2 className="font-semibold">Available Weekly Events</h2>
+        <h2 className="font-semibold">Weekly Events</h2>
         <div className="ml-auto">
           <Link to={{pathname: '/events', query: {dateFilter: 'weekly'}}}>
             <SeeAllButton />
