@@ -63,11 +63,14 @@ function Home() {
 
   }, [currentUser])
 
+  const weeklyEvents = events.filter(event => event.EventCategory === 'Weekly');
+  const popularEvents = events.filter(event => event.EventCategory === 'Popular');
+
   return (
     <div className="p-4">
       
       <div className="flex flex-row">
-        <h2 className="font-semibold">My Weekly Events</h2>
+        <h2 className="font-semibold">My Booked Events</h2>
         <div className="ml-auto">
           <Link to={'/bookings'}>
             <SeeAllButton/>
@@ -89,7 +92,7 @@ function Home() {
                 bookings.map(booking => (
                   
                   <Link key={booking.id} to={'/booking/' + booking.id}>
-                    <div key={booking.id} className='backdrop-blur-sm w-96 my-4 ml-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                    <div key={booking.id} className='backdrop-blur-sm w-96 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
                         <h2 className='pb-1 font-semibold text-colour1'>{booking.EventName}</h2>
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{booking.NumberOfTickets} Tickets</p>
@@ -107,8 +110,8 @@ function Home() {
       <div className="flex flex-row">
         <h2 className="font-semibold">Available Weekly Events</h2>
         <div className="ml-auto">
-          <Link to={{pathname: '/events', query: {dateFilter: 'weekly'} }}>
-            <SeeAllButton/>
+          <Link to={{pathname: '/events', query: {dateFilter: 'weekly'}}}>
+            <SeeAllButton />
           </Link>
         </div>
       </div>
@@ -120,14 +123,14 @@ function Home() {
           console.log(e);
           }}>
 
-          {events.length === 0 ? (
-              <h1 className='flex justify-center mt-2'>No Events to show</h1>
+          {weeklyEvents.length === 0 ? (
+              <h1 className='my-4'>Oh, looks like there's no events to show!</h1>
               ) : (
                 
-                events.map(event => (
+                weeklyEvents.map(event => (
                   
                   <Link key={event.id} to={'/event/' + event.id}>
-                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 ml-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
                         <h2 className='pb-1 font-semibold text-colour1'>{event.EventName}</h2>
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
@@ -158,14 +161,14 @@ function Home() {
           console.log(e);
           }}>
 
-          {events.length === 0 ? (
+          {popularEvents.length === 0 ? (
               <h1 className='flex justify-center mt-2'>No Events to show</h1>
               ) : (
                 
-                events.map(event => (
+                popularEvents.map(event => (
                   
                   <Link key={event.id} to={'/event/' + event.id}>
-                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 ml-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
                         <h2 className='pb-1 font-semibold text-colour1'>{event.EventName}</h2>
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
