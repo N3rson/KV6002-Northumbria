@@ -14,9 +14,10 @@ export default {
         steelBlue: '#4682B4',
         primary: '#edf4ff',
         secondary: '#fcf0ed',
-        colour1: '#A2BEEF',
-        colour2: '#FBB2A3',
-        buttonHover: '#facac0',
+        colour1: '#7da6f0',
+        colour2: '#faaf98',
+        seeAllHover: '#fcbfac',
+        bookHover: "#5f92ed",
       },
     },
     borderRadius: {

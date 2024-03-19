@@ -4,10 +4,22 @@ import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
 import { Link } from 'react-router-dom';
+import { auth } from '../firebaseConfig'
 import SeeAllButton from '../components/SeeAllButton'
+
+/**
+ * Home Page
+ * 
+ * This page is responsible for displaying the users booked events and filtered events. It allows the user to view their weekly bookings, weekly events and popular events.
+ * 
+ * @category Page
+ * @author Lucie Stephenson
+*/
 
 function Home() {
   const [events, setEvents] = useState([])
+  const [bookings, setBookings] = useState([])
+  const currentUser = auth.currentUser
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -18,6 +30,7 @@ function Home() {
                 id: doc.id,
                 ...doc.data()
             }))
+
             setEvents(eventsData)
         } catch (error) {
             console.error('Error fetching events: ', error)
@@ -25,7 +38,30 @@ function Home() {
     }
 
     fetchEvents()
-  }, [])
+
+    //Responsible for fetching the logged in user's booking data from the database
+    const fetchBookings = async () => {
+      try {
+          const bookingsCollection = collection(firestore, 'Bookings')
+          const userBookingsQuery = query(bookingsCollection, where("userId", "==", currentUser.uid))
+          const bookingsSnapshot = await getDocs(userBookingsQuery)
+          const bookingsData = bookingsSnapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+          }))
+          
+          setBookings(bookingsData)
+      } catch (error) {
+          console.error('Error fetching bookings: ', error)
+      }
+    }
+
+    //if the user is logged in then the bookings are fetched
+    if (currentUser) {
+      fetchBookings()
+    }
+
+  }, [currentUser])
 
   return (
     <div className="p-4">
@@ -46,21 +82,21 @@ function Home() {
           console.log(e);
           }}>
 
-          {events.length === 0 ? (
-              <h1 className='flex justify-center mt-2'>No Events to show</h1>
+          {bookings.length === 0 ? (
+              <h1 className='flex justify-center mt-2'>Oh, looks like you have no events booked this week!</h1>
               ) : (
                 
-                events.map(event => (
+                bookings.map(booking => (
                   
-                  <Link key={event.id} to={'/event/' + event.id}>
-                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 ml-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                  <Link key={booking.id} to={'/booking/' + booking.id}>
+                    <div key={booking.id} className='backdrop-blur-sm w-96 my-4 ml-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
-                        <h2 className='pb-1 font-semibold text-colour1'>{event.EventName}</h2>
-                        <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
+                        <h2 className='pb-1 font-semibold text-colour1'>{booking.EventName}</h2>
+                        <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{booking.NumberOfTickets} Tickets</p>
                       </div>
-                      <p className=''>{event.EventCategory}</p>
-                      <p className=''>{event.EventDate}</p>
-                      <p className=''>{event.EventLocation}</p>
+                      <p className=''>{booking.EventDate}, {booking.EventTime}</p>
+                      <p className=''>{booking.EventAddress}</p>
+                      <p className=''>{booking.EventLocation}</p>
                     </div>
                   </Link>
                 ))
@@ -97,7 +133,7 @@ function Home() {
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
                       </div>
                       <p className=''>{event.EventCategory}</p>
-                      <p className=''>{event.EventDate}</p>
+                      <p className=''>{event.EventDate}, {event.EventTime}</p>
                       <p className=''>{event.EventLocation}</p>
                     </div>
                   </Link>
@@ -109,7 +145,7 @@ function Home() {
       <div className="flex flex-row">
         <h2 className="font-semibold">Popular Events</h2>
         <div className="ml-auto">
-          <Link to={{pathname: '/events', query: {category: 'Popular'} }}>
+          <Link to={{pathname: '/events', query: {EventCategory: 'Popular'} }}>
             <SeeAllButton/>
           </Link>
         </div>
@@ -135,7 +171,7 @@ function Home() {
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
                       </div>
                       <p className=''>{event.EventCategory}</p>
-                      <p className=''>{event.EventDate}</p>
+                      <p className=''>{event.EventDate}, {event.EventTime}</p>
                       <p className=''>{event.EventLocation}</p>
                     </div>
                   </Link>

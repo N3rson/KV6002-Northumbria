@@ -99,15 +99,17 @@ function BookedEventInfo() {
             <BackBtn />
             <div key={booking.id} className='ml-10 mr-10 flex flex-col'>
                 <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black'>{booking.EventName}</h1>
-                <p className='flex justify-center text-lg mt-10'>{booking.EventAddress}</p>
+                <p className='flex mt-5 justify-center font-semibold text-lg'>Location:</p>
+                <p className='flex justify-center text-lg'>{booking.EventAddress}</p>
                 <p className='flex justify-center text-lg'>{booking.EventLocation}</p>
-                <p className='flex justify-center text-lg mt-4'>{booking.EventDate} at {booking.EventTime}</p>
+                <p className='flex mt-3 justify-center font-semibold text-lg'>Date and Time:</p>
+                <p className='flex justify-center text-lg'>{booking.EventDate} at {booking.EventTime}</p>
             </div>
-            <div className='flex flex-col items-center mt-10'>
-                <p className='text-lg'>My Tickets:</p>
+            <div className='flex flex-col items-center mt-5'>
+                <p className='mb-5 font-semibold text-lg'>My Tickets:</p>
                 {tickets.map(ticket => (
                     <Link key={ticket.id} to={'/booking/' + bookingId + '/ticket/' + ticket.id}>
-                        <button className='bg-steelBlue rounded-lg text-white xs:w-72 md:w-80 m-2 h-20 flex items-center justify-between'>
+                        <button className='bg-colour1 rounded-lg text-white xs:w-72 md:w-80 m-2 h-20 flex items-center justify-between hover:bg-bookHover'>
                             <p className='ml-2'>{ticketNumber++}</p>
                             <span>{ticket.id}</span>
                             <img src={rightArrow} alt="Arrow Right" className="mr-2" />
@@ -116,7 +118,7 @@ function BookedEventInfo() {
                 ))}
             </div>
             <div className='flex justify-center mt-10'>
-                <button className='bg-red-400 p-4 rounded-lg text-white xs:w-72 md:w-80 mb-24' onClick={handleCancelBooking}>Cancel Entire Booking</button>
+                <button className='bg-red-400 p-4 rounded-xlg text-white xs:w-72 md:w-80 mb-24 hover:bg-red-500' onClick={handleCancelBooking}>Cancel Entire Booking</button>
             </div>
       </div>
     )

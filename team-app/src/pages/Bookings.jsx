@@ -54,7 +54,7 @@ function Bookings() {
       <div>
         <div className='flex justify-center'>
         <button
-          className='bg-black w-60 rounded-xlg shadow-middle border-2 border-gray-200 text-xl text-white p-2'
+          className='bg-colour2 w-60 p-2 rounded-xlg text-xl hover:bg-seeAllHover'
           onClick={handleReserveAccess}>Access Waiting List</button>
         </div>
         {bookings.length === 0 && (
@@ -64,13 +64,17 @@ function Bookings() {
           </div>
         )}
           {bookings.map(booking => (
-            <Link key={booking.id} to={'/booking/' + booking.id}>
-              <div key={booking.id} className='bg-white rounded-lg border-black m-10 shadow-middle p-4'>
-              <h2 className='flex justify-center font-bold'>{booking.EventName}</h2>
-              <h2 className='flex justify-center'>{booking.EventDate} at {booking.EventTime}</h2>
-              <h2 className='flex justify-center'>{booking.EventAddress}</h2>
-              <h2 className='flex justify-center'>{booking.EventLocation}</h2>
-              <h2 className='flex justify-center'>Number of Tickets: {booking.NumberOfTickets}</h2>
+            <Link key={booking.id} to={'/booking/' + booking.id}>  
+              <div className='flex justify-center'>
+                <div key={booking.id} className='backdrop-blur-sm w-96 m-10 p-3 shadow-middle bg-white/30 rounded-lg'>
+                  <div className='flex flex-row'>
+                    <h2 className='pb-1 font-semibold text-colour1'>{booking.EventName}</h2>
+                    <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{booking.NumberOfTickets} Tickets</p>
+                  </div>
+                    <p className=''>{booking.EventDate}, {booking.EventTime}</p>
+                    <p className=''>{booking.EventAddress}</p>
+                    <p className=''>{booking.EventLocation}</p>
+                </div>
               </div>
             </Link>
           ))}

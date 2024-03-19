@@ -153,21 +153,24 @@ function EventInfo() {
             <img src={backBtn} alt="Back" className="h-6 w-6 ml-10" onClick={() => navigate(-1)} />
             <div key={event.id} className='ml-10 mr-10 flex flex-col'>
                 <h1 className='flex justify-center font-bold text-xl border-b-2 border-b-black'>{event.EventName}</h1>
-                <p className='flex justify-center text-sm mt-10'>{event.EventAddress}</p>
-                <p className='flex justify-center text-sm'>{event.EventLocation}</p>
-                <p className='flex justify-center text-sm mt-1'>{event.EventDate} at {event.EventTime}</p>
-                <p className='flex justify-center text-sm mt-1'>{event.EventLength} Duration</p>
-                <p className='flex justify-center mt-10 text-sm bg-white p-6 rounded-lg'>{event.EventDescription}</p>
+                <p className='flex mt-5 justify-center font-semibold text-lg'>Location:</p>
+                <p className='flex justify-center text-lg'>{event.EventAddress}</p>
+                <p className='flex justify-center text-lg'>{event.EventLocation}</p>
+                <p className='flex mt-3 justify-center font-semibold text-lg'>Date and Time:</p>
+                <p className='flex justify-center text-lg mt-1'>{event.EventDate} at {event.EventTime}</p>
+                <p className='flex mt-3 justify-center font-semibold text-lg'>Duration:</p>
+                <p className='flex justify-center text-lg'>{event.EventLength}</p>
+                <p className='flex justify-center mt-5 text-sm shadow-middle bg-white p-6 rounded-lg'>{event.EventDescription}</p>
                 <div className="flex justify-center mt-10">
-                    <p className="h-20 w-20 bg-white rounded-lg flex items-center justify-center mr-5">
+                    <p className="h-20 w-20 shadow-middle bg-white rounded-lg flex items-center justify-center mr-5">
                         {event.EventAttendance} / {event.EventLimit}
                     </p>
                     <div className="flex items-center justify-center flex-col">
-                        <button className="bg-steelBlue text-white rounded-lg flex items-center justify-center mb-2 p-2 w-36">
+                        <button className="bg-colour2 rounded-xlg flex items-center justify-center mb-2 p-2 w-36 hover:bg-seeAllHover">
                             <p className='mr-2 text-xs'>Download PDF</p>
                             <img src={downloadIcon} alt="Download" className="h-6 w-6" />
                         </button>
-                        <button className="bg-steelBlue text-white rounded-lg flex items-center justify-center mb-2 p-2 w-36">
+                        <button className="bg-colour2 rounded-xlg flex items-center justify-center mb-2 p-2 w-36 hover:bg-seeAllHover">
                             <p className='mr-6 text-xs'>Share Event</p>
                             <img src={shareIcon} alt="Download" className="h-6 w-6" />
                         </button>
@@ -191,27 +194,27 @@ function EventInfo() {
                         {!isBookButtonDisabled && !isAlreadyBooked && (
                             <>
                                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
+                                <button className="bg-colour1 hover:bg-bookHover text-white font-bold mt-5 py-2 px-4 rounded-xlg xs:w-60 md:w-80 mb-5" onClick={() => handleBookClick(selectedBookings)}>Book</button>
                             </>
                         )}
                         {/*Checking if the event is already booked and disabling the button*/}
                         {isAlreadyBooked && (
                             <>
-                                <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Already Booked</button>
+                                <button className='bg-gray-400 text-white font-bold mt-5 py-2 px-4 rounded-xlg w-60' disabled>You have a ticket!</button>
                             </>
                         )}
                         {/*Checking if the booking is full and disabling the button if it is*/}
                         {isBookButtonDisabled && !isAlreadyBooked && (
                             <>
-                                <button className='bg-gray-400 text-white font-bold py-2 px-4 rounded-lg w-60' disabled>Booking Full</button>
+                                <button className='bg-gray-400 text-white font-bold mt-5 py-2 px-4 rounded-xlg w-60' disabled>Booking Full</button>
                                 <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
                                 {/*Enabling the waiting list button if the booking is full*/}
                                 {!isAlreadyInWaitingList && (
-                                    <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
+                                    <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-xlg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
                                 )}
                                 {/*Disabling the waiting list button if the user is already in the waiting list*/}
                                 {isAlreadyInWaitingList && (
-                                    <button className="bg-gray-400 text-white font-bold py-2 px-4 rounded-lg xs:w-60 md:w-80 mb-20" disabled>Joined</button>
+                                    <button className="bg-gray-400 text-white font-bold py-2 px-4 rounded-xlg xs:w-60 md:w-80 mb-20" disabled>Joined</button>
                                 )}
                             </>
                         )}

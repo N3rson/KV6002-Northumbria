@@ -15,7 +15,7 @@ function Select(props){
             <select
                 value={props.selectType}
                 onChange={props.handleSelectType}
-                className='bg-black w-60 rounded-xlg shadow-middle border-2 border-gray-200 text-xl text-white p-2'>
+                className='bg-colour2 w-60 p-2 rounded-xlg text-xl border-2 border-colour2'>
                 <option value="">{props.placeholder}</option>
                 {props.options}
             </select>
