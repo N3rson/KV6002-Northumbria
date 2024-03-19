@@ -3,8 +3,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { collection, getDocs, updateDoc } from 'firebase/firestore'
-import { useAuth } from '../auth'
-import { firestore } from '../firebaseConfig'
+import { firestore, auth } from '../firebaseConfig'
 import './MyCalendarStyle.css'
 import DownloadBtn from '../assets/icon_download.png'
 import CloseBtn from '../assets/icon_close.png'
@@ -15,7 +14,7 @@ const localizer = momentLocalizer(moment)
 
 function MyCalendar() {
 
-  const { currentUser } = useAuth();
+ // const { currentUser } = auth();
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventBooked, setIsEventBooked] = useState(false);
@@ -77,12 +76,13 @@ function MyCalendar() {
   };
 
   const checkEventBooking = async (EventId) => {
+   // if(!currentUser) return //Exit if no user logged in
     console.log("Checking event booking for event ID:", EventId)
     const bookingsCollection = collection(firestore, 'Bookings')
     const bookingsSnapshot = await getDocs(bookingsCollection)
     bookingsSnapshot.forEach((doc) => {
       console.log("Booking document:", doc.data())
-      if (doc.data().EventId === EventId  && doc.data().userId === currentUser.uid) {
+      if (doc.data().EventId === EventId ){// && doc.data().userId === currentUser.uid) {
         setSelectedBooking(doc.data())
         setIsEventBooked(true)
         return;
@@ -109,6 +109,26 @@ function MyCalendar() {
     };
   }, []);
 
+  const eventStyleGetter = (event, start, end, isSelected) => {
+    let backgroundColor = '#CCCCCC'
+    if (isEventBooked) {
+      const backgroundColor = '#1565C0'
+    }
+    
+    const style = {
+      backgroundColor: backgroundColor,
+      borderRadius: '5px',
+      opacity: 0.8,
+      color: 'white',
+      border: 'none',
+      display: 'block',
+    };
+    return {
+      style: style
+    };
+  };
+    
+
     return (
       <div>
         <Calendar
@@ -117,7 +137,8 @@ function MyCalendar() {
           startAccessor="start"
           endAccessor="end"
           style={{height: 500}}
-          onSelectEvent={handleEventClick} 
+          onSelectEvent={handleEventClick}
+          eventPropGetter={eventStyleGetter} 
         />
         
         {selectedEvent && (
