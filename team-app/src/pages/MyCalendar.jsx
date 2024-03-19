@@ -3,10 +3,11 @@ import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { collection, getDocs, updateDoc } from 'firebase/firestore'
+import { useAuth } from '../auth'
 import { firestore } from '../firebaseConfig'
 import './MyCalendarStyle.css'
-import DownloadBtn from '../assets/icon_download.png';
-import CloseBtn from '../assets/icon_close.png';
+import DownloadBtn from '../assets/icon_download.png'
+import CloseBtn from '../assets/icon_close.png'
 
 
 
@@ -14,6 +15,7 @@ const localizer = momentLocalizer(moment)
 
 function MyCalendar() {
 
+  const { currentUser } = useAuth();
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventBooked, setIsEventBooked] = useState(false);
@@ -59,8 +61,6 @@ function MyCalendar() {
             start: startDate,
             end: endDate,
             location: location,
-            // eventPageLink: '/events/${doc.id}', 
-            // to be adjusted to route to events page
           }
           eventsData.push(eventData)
         })
@@ -82,7 +82,7 @@ function MyCalendar() {
     const bookingsSnapshot = await getDocs(bookingsCollection)
     bookingsSnapshot.forEach((doc) => {
       console.log("Booking document:", doc.data())
-      if (doc.data().EventId === EventId) {
+      if (doc.data().EventId === EventId  && doc.data().userId === currentUser.uid) {
         setSelectedBooking(doc.data())
         setIsEventBooked(true)
         return;
