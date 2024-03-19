@@ -14,7 +14,7 @@ const localizer = momentLocalizer(moment)
 
 function MyCalendar() {
 
- // const { currentUser } = auth();
+  const currentUser = auth.currentUser;
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventBooked, setIsEventBooked] = useState(false);
@@ -25,8 +25,8 @@ function MyCalendar() {
     const fetchEvents = async () => {
         const eventsCollection = collection(firestore, 'Events')
         const eventsSnapshot = await getDocs(eventsCollection)
-    
         const eventsData = []
+
         eventsSnapshot.forEach((doc) => {
           console.log('Event Data: ', doc.data());
 
@@ -76,17 +76,19 @@ function MyCalendar() {
   };
 
   const checkEventBooking = async (EventId) => {
-   // if(!currentUser) return //Exit if no user logged in
+    setIsEventBooked(false);
+    if(!currentUser) return //Exit if no user logged in
     console.log("Checking event booking for event ID:", EventId)
     const bookingsCollection = collection(firestore, 'Bookings')
-    const bookingsSnapshot = await getDocs(bookingsCollection)
+    const q = query(bookingsCollection, where('EventId', '==', eventID), where('userId', '==', currentUser.UserUID))
+    const bookingsSnapshot = await getDocs(q)
+
     bookingsSnapshot.forEach((doc) => {
       console.log("Booking document:", doc.data())
-      if (doc.data().EventId === EventId ){// && doc.data().userId === currentUser.uid) {
+      
         setSelectedBooking(doc.data())
         setIsEventBooked(true)
-        return;
-      }
+      
     })
   };
 
@@ -110,9 +112,12 @@ function MyCalendar() {
   }, []);
 
   const eventStyleGetter = (event, start, end, isSelected) => {
-    let backgroundColor = '#CCCCCC'
+    var backgroundColor = '#CCCCCC'
     if (isEventBooked) {
-      const backgroundColor = '#1565C0'
+      backgroundColor = '#7da6f0'
+    }
+    else {
+      backgroundColor = '#CCCCCC'
     }
     
     const style = {
@@ -131,7 +136,7 @@ function MyCalendar() {
 
     return (
       <div>
-        <Calendar
+        <Calendar className="mx-3 shadow-middle bg-white/30 rounded-lg"
           localizer={localizer}
           events = {CalendarEvents} 
           startAccessor="start"
@@ -149,10 +154,10 @@ function MyCalendar() {
                 <img src={CloseBtn} alt="Close" />
               </span>
               <h3 className="event-title">{selectedEvent.title}</h3>
-              <p className="event-details">Location: {selectedEvent.location}</p>
+              <p className="event-details">{selectedEvent.location}</p>
               {isEventBooked && selectedBooking ? (
                 <div>
-                  <p className="event-details">You have booked this event</p>
+                  <p className="event-booked">Oh, looks like you have booked this event!</p>
                   <a href={`/kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
                 </div>
               ): (
