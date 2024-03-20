@@ -88,7 +88,7 @@ function MyCalendar() {
     const bookingsCollection = collection(firestore, 'Bookings');
 
     setIsEventBooked(false);
-    if(!currentUser || !currentUser['User UID']) {
+    if(!currentUser) {
       console.log('User not logged in or User UID is undefined.')
         return 
     }//Exit if no user logged in. This is were error is
@@ -97,7 +97,7 @@ function MyCalendar() {
       const q = query(
         bookingsCollection, 
         where('EventId', '==', EventId), 
-        where('userId', '==', currentUser['User UID'])
+        where('userId', '==', currentUser.uid)
         )
 
       const bookingsSnapshot = await getDocs(q)
