@@ -171,10 +171,10 @@ const closeModal = () => {
               {isEventBooked && selectedBooking ? (
                 <div>
                   <p className="event-booked">Oh, looks like you have booked this event!</p>
-                  <a href={`/kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
+                  <a href={'/kv6002/booking/' + selectedBooking.id} className="visit-event-link">Visit Booking Page</a>
                 </div>
               ): (
-                <a href={`/kv6002/event/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
+                <a href={'/kv6002/event/' + selectedEvent.id} className="visit-event-link">Visit Event Page</a>
               )}
               
             </div>
