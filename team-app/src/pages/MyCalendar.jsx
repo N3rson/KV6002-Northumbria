@@ -14,21 +14,31 @@ const localizer = momentLocalizer(moment)
 
 function MyCalendar() {
 
-  const currentUser = auth.currentUser;
+  const [currentUser, setCurrentUser] = useState(null);
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventBooked, setIsEventBooked] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState (null);
   const modalRef = useRef(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+  // above useEffect is to try and solve the User UID undefined/ user not logged in error
   
   useEffect(() => {
     const fetchEvents = async () => {
+      try{
         const eventsCollection = collection(firestore, 'Events')
         const eventsSnapshot = await getDocs(eventsCollection)
         const eventsData = []
 
         eventsSnapshot.forEach((doc) => {
-          console.log('Event Data: ', doc.data());
+          //console.log('Event Data: ', doc.data()); issue resolved
 
           // Parse EventDate and EventTime to create start date
           const eventDateString = doc.data().EventDate;
@@ -64,38 +74,52 @@ function MyCalendar() {
           eventsData.push(eventData)
         })
         setCalendarEvents(eventsData)
-    }
+      } catch (error) {
+        console.error('Error fetching events:', error)
+      }
+    } 
     
     
     fetchEvents()
-  }, [])
+  }, []);
   
-  const handleEventClick = (event) => {
-    setSelectedEvent(event)
-    checkEventBooking(event.id)
-  };
-
+  
   const checkEventBooking = async (EventId) => {
+    const bookingsCollection = collection(firestore, 'Bookings');
+
     setIsEventBooked(false);
-    if(!currentUser) return //Exit if no user logged in
-    console.log("Checking event booking for event ID:", EventId)
-    const bookingsCollection = collection(firestore, 'Bookings')
-    const q = query(bookingsCollection, where('EventId', '==', eventID), where('userId', '==', currentUser.UserUID))
-    const bookingsSnapshot = await getDocs(q)
+    if(!currentUser || !currentUser['User UID']) {
+      console.log('User not logged in or User UID is undefined.')
+        return 
+    }//Exit if no user logged in. This is were error is
 
-    bookingsSnapshot.forEach((doc) => {
-      console.log("Booking document:", doc.data())
-      
-        setSelectedBooking(doc.data())
+    try{
+      const q = query(
+        bookingsCollection, 
+        where('EventId', '==', EventId), 
+        where('userId', '==', currentUser['User UID'])
+        )
+
+      const bookingsSnapshot = await getDocs(q)
+
+      if(!bookingsSnapshot.empty){
         setIsEventBooked(true)
-      
-    })
+        setSelectedBooking(bookingsSnapshot.docs[0].data())
+      }
+    } catch (error) {
+      console.error('Error checking event booking:',error)
+    }
   };
 
-  const closeModal = () => {
-    setSelectedEvent(null)
-    setIsEventBooked(false)
-  };
+const handleEventClick = (event) => {
+  setSelectedEvent(event)
+  checkEventBooking(event.id)
+};
+
+const closeModal = () => {
+   setSelectedEvent(null)
+   setIsEventBooked(false)
+};
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -111,27 +135,16 @@ function MyCalendar() {
     };
   }, []);
 
-  const eventStyleGetter = (event, start, end, isSelected) => {
-    var backgroundColor = '#CCCCCC'
-    if (isEventBooked) {
-      backgroundColor = '#7da6f0'
-    }
-    else {
-      backgroundColor = '#CCCCCC'
-    }
-    
-    const style = {
-      backgroundColor: backgroundColor,
+  const eventStyleGetter = (event, start, end, isSelected) => ({ 
+    style: {
+      backgroundColor: isEventBooked? '#7da6f0' : '#CCCCCC',
       borderRadius: '5px',
       opacity: 0.8,
       color: 'white',
       border: 'none',
       display: 'block',
-    };
-    return {
-      style: style
-    };
-  };
+    }
+  });
     
 
     return (
