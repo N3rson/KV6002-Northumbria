@@ -1,25 +1,36 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth } from '../firebaseConfig'; 
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginMessage, setLoginMessage] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/'); // Redirect to the home page upon successful login
+      setLoginMessage('Login successful!');
+      setTimeout(() => setLoginMessage(''), 3000); // Clear message after 3 seconds
+      navigate('/');
+      setTimeout(() => setLoginMessage('successful'), 3000);
+      setTimeout(() => setLoginMessage(''), 3000);
     } catch (error) {
-      console.error("Login failed:", error.message);
+      setLoginMessage('Failed to log in. Please check your credentials.');
+      setTimeout(() => setLoginMessage(''), 3000);
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-primary">
+    <div className="relative min-h-screen flex justify-center items-center bg-primary">
+      {loginMessage && (
+        <div className="absolute top-0 right-0 m-4 bg-green-100 text-green-700 p-2 rounded">
+          {loginMessage}
+        </div>
+      )}
       <div className="p-8 bg-white shadow-middle rounded-xlg max-w-sm w-full">
         <h1 className="text-2xl font-bold text-center text-steelBlue mb-6">Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
