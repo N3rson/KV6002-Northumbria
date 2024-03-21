@@ -28,8 +28,7 @@ function MyCalendar() {
 
     return () => unsubscribe();
   }, []);
-  // above useEffect is to try and solve the User UID undefined/ user not logged in error
-  
+   
   useEffect(() => {
     const fetchEvents = async () => {
       try{
@@ -91,7 +90,7 @@ function MyCalendar() {
     if(!currentUser) {
       console.log('User not logged in or User UID is undefined.')
         return 
-    }//Exit if no user logged in. This is were error is
+    }//Exit if no user logged in. 
 
     try{
       const q = query(
@@ -137,7 +136,7 @@ const closeModal = () => {
 
   const eventStyleGetter = (event, start, end, isSelected) => ({ 
     style: {
-      backgroundColor: isEventBooked? '#7da6f0' : '#CCCCCC',
+      backgroundColor: (selectedEvent && selectedEvent.id === event.id && isEventBooked) ? '#7da6f0' : '#CCCCCC',
       borderRadius: '5px',
       opacity: 0.8,
       color: 'white',
