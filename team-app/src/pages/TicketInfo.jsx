@@ -83,10 +83,10 @@ function TicketInfo(){
                 <h2 className='mt-4'>{ticketId}</h2>
                 <img src={qrCode} alt="Ticket QR" className="w-40 h-40 mt-20" />
                 <div className='flex justify-center mt-10'>
-                    <button className='bg-steelBlue p-4 rounded-lg text-white xs:w-72 md:w-80'>Download Ticket (PDF)</button>
+                    <button className='bg-colour1 p-4 rounded-xlg text-white xs:w-72 md:w-80 hover:bg-bookHover'>Download Ticket (PDF)</button>
                 </div>
                 <div className='flex justify-center mt-2'>
-                    <button className='bg-red-400 p-4 rounded-lg text-white xs:w-72 md:w-80 mt-4' onClick={handleTicketCancellation}>Cancel Ticket</button>
+                    <button className='bg-red-400 p-4 rounded-xlg text-white xs:w-72 md:w-80 mt-4 hover:bg-red-500' onClick={handleTicketCancellation}>Cancel Ticket</button>
                 </div>
             </div>
         </div>
