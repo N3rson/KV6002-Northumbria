@@ -8,7 +8,11 @@ import './MyCalendarStyle.css'
 import DownloadBtn from '../assets/icon_download.png'
 import CloseBtn from '../assets/icon_close.png'
 
-
+/* Calendar page created by w20022537 
+ Aided by:
+    React Big Calendar https://github.com/jquense/react-big-calendar 
+    ChatGPT
+*/
 
 const localizer = momentLocalizer(moment)
 
@@ -85,7 +89,7 @@ function MyCalendar() {
   
   const checkEventBooking = async (EventId) => {
     const bookingsCollection = collection(firestore, 'Bookings');
-
+     // get which event has been booked by user personalised user
     setIsEventBooked(false);
     if(!currentUser) {
       console.log('User not logged in or User UID is undefined.')
@@ -110,6 +114,20 @@ function MyCalendar() {
     }
   };
 
+  const eventStyleGetter = (event, start, end, isSelected) => ({ 
+    // change Event colour to distinguish between booked an not booked events
+    style: {
+      backgroundColor: (selectedEvent && selectedEvent.id === event.id && isEventBooked) ? '#7da6f0' : '#CCCCCC',
+      borderRadius: '5px',
+      opacity: 0.8,
+      color: 'white',
+      border: 'none',
+      display: 'block',
+    }
+  });
+  
+ 
+//open pop-up window
 const handleEventClick = (event) => {
   setSelectedEvent(event)
   checkEventBooking(event.id)
@@ -120,6 +138,7 @@ const closeModal = () => {
    setIsEventBooked(false)
 };
 
+// closes the pop-up windo on click outside pop-up window
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -133,17 +152,9 @@ const closeModal = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     };
   }, []);
+   
 
-  const eventStyleGetter = (event, start, end, isSelected) => ({ 
-    style: {
-      backgroundColor: (selectedEvent && selectedEvent.id === event.id && isEventBooked) ? '#7da6f0' : '#CCCCCC',
-      borderRadius: '5px',
-      opacity: 0.8,
-      color: 'white',
-      border: 'none',
-      display: 'block',
-    }
-  });
+  
     
 
     return (
