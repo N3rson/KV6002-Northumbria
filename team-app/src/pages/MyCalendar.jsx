@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { collection, getDocs, updateDoc } from 'firebase/firestore'
+import { collection, getDocs, updateDoc, query, where } from 'firebase/firestore'
 import { firestore, auth } from '../firebaseConfig'
 import './MyCalendarStyle.css'
 import DownloadBtn from '../assets/icon_download.png'
@@ -14,21 +14,30 @@ const localizer = momentLocalizer(moment)
 
 function MyCalendar() {
 
- // const { currentUser } = auth();
+  const [currentUser, setCurrentUser] = useState(null);
   const [CalendarEvents, setCalendarEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventBooked, setIsEventBooked] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState (null);
   const modalRef = useRef(null);
-  
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+   
   useEffect(() => {
     const fetchEvents = async () => {
+      try{
         const eventsCollection = collection(firestore, 'Events')
         const eventsSnapshot = await getDocs(eventsCollection)
-    
         const eventsData = []
+
         eventsSnapshot.forEach((doc) => {
-          console.log('Event Data: ', doc.data());
+          //console.log('Event Data: ', doc.data()); issue resolved
 
           // Parse EventDate and EventTime to create start date
           const eventDateString = doc.data().EventDate;
@@ -64,36 +73,52 @@ function MyCalendar() {
           eventsData.push(eventData)
         })
         setCalendarEvents(eventsData)
-    }
+      } catch (error) {
+        console.error('Error fetching events:', error)
+      }
+    } 
     
     
     fetchEvents()
-  }, [])
+  }, []);
   
-  const handleEventClick = (event) => {
-    setSelectedEvent(event)
-    checkEventBooking(event.id)
-  };
-
+  
   const checkEventBooking = async (EventId) => {
-   // if(!currentUser) return //Exit if no user logged in
-    console.log("Checking event booking for event ID:", EventId)
-    const bookingsCollection = collection(firestore, 'Bookings')
-    const bookingsSnapshot = await getDocs(bookingsCollection)
-    bookingsSnapshot.forEach((doc) => {
-      console.log("Booking document:", doc.data())
-      if (doc.data().EventId === EventId ){// && doc.data().userId === currentUser.uid) {
-        setSelectedBooking(doc.data())
+    const bookingsCollection = collection(firestore, 'Bookings');
+
+    setIsEventBooked(false);
+    if(!currentUser) {
+      console.log('User not logged in or User UID is undefined.')
+        return 
+    }//Exit if no user logged in. 
+
+    try{
+      const q = query(
+        bookingsCollection, 
+        where('EventId', '==', EventId), 
+        where('userId', '==', currentUser.uid)
+        )
+
+      const bookingsSnapshot = await getDocs(q)
+
+      if(!bookingsSnapshot.empty){
         setIsEventBooked(true)
-        return;
+        setSelectedBooking(bookingsSnapshot.docs[0].data())
       }
-    })
+    } catch (error) {
+      console.error('Error checking event booking:',error)
+    }
   };
 
-  const closeModal = () => {
-    setSelectedEvent(null)
-    setIsEventBooked(false)
-  };
+const handleEventClick = (event) => {
+  setSelectedEvent(event)
+  checkEventBooking(event.id)
+};
+
+const closeModal = () => {
+   setSelectedEvent(null)
+   setIsEventBooked(false)
+};
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -109,29 +134,21 @@ function MyCalendar() {
     };
   }, []);
 
-  const eventStyleGetter = (event, start, end, isSelected) => {
-    let backgroundColor = '#CCCCCC'
-    if (isEventBooked) {
-      const backgroundColor = '#1565C0'
-    }
-    
-    const style = {
-      backgroundColor: backgroundColor,
+  const eventStyleGetter = (event, start, end, isSelected) => ({ 
+    style: {
+      backgroundColor: (selectedEvent && selectedEvent.id === event.id && isEventBooked) ? '#7da6f0' : '#CCCCCC',
       borderRadius: '5px',
       opacity: 0.8,
       color: 'white',
       border: 'none',
       display: 'block',
-    };
-    return {
-      style: style
-    };
-  };
+    }
+  });
     
 
     return (
       <div>
-        <Calendar
+        <Calendar className="mx-3 shadow-middle bg-white/30 rounded-lg"
           localizer={localizer}
           events = {CalendarEvents} 
           startAccessor="start"
@@ -149,14 +166,14 @@ function MyCalendar() {
                 <img src={CloseBtn} alt="Close" />
               </span>
               <h3 className="event-title">{selectedEvent.title}</h3>
-              <p className="event-details">Location: {selectedEvent.location}</p>
+              <p className="event-details">{selectedEvent.location}</p>
               {isEventBooked && selectedBooking ? (
                 <div>
-                  <p className="event-details">You have booked this event</p>
-                  <a href={`/kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
+                  <p className="event-booked">Oh, looks like you have booked this event!</p>
+                  <a href={'/kv6002/booking/' + selectedBooking.id} className="visit-event-link">Visit Booking Page</a>
                 </div>
               ): (
-                <a href={`/kv6002/event/${selectedEvent.id}`} className="visit-event-link">Visit Event Page</a>
+                <a href={'/kv6002/event/' + selectedEvent.id} className="visit-event-link">Visit Event Page</a>
               )}
               
             </div>
