@@ -4,6 +4,16 @@ import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import SignOutIcon from '../assets/sign-out-icon.png';
 
+/**
+ * Sign Out feature
+ * 
+ * This component allows the user to get logged out of the system. 
+ * 
+ * @category Component
+ * @author Navil Hassan
+*/
+
+
 const SignOutButton = () => {
   const navigate = useNavigate();
   const [feedbackMessage, setFeedbackMessage] = useState('');

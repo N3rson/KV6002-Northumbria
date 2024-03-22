@@ -3,6 +3,15 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig'; 
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Login Page
+ * 
+ * This page allows the user to get logged in and gain access to the system. 
+ * 
+ * @category Page
+ * @author Navil Hassan
+*/
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
