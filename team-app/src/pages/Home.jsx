@@ -10,7 +10,7 @@ import SeeAllButton from '../components/SeeAllButton'
 /**
  * Home Page
  * 
- * This page is responsible for displaying the users booked events and filtered events. It allows the user to view their weekly bookings, weekly events and popular events.
+ * This page is responsible for displaying the user's booked events and filtered events. It allows the user to view their bookings, weekly events and popular events.
  * 
  * @category Page
  * @author Lucie Stephenson
@@ -71,7 +71,7 @@ function Home() {
   return (
     <div className="m-4">
       
-      {/* MY BOOKED EVENTS */}
+      {/* MY BOOKED EVENTS SECTION */}
       <div className="flex flex-row">
         <h2 className="font-semibold">My Booked Events</h2>
         <div className="ml-auto">
@@ -110,7 +110,7 @@ function Home() {
         </Flicking>
       </div>
 
-      {/* WEEKLY EVENTS */}
+      {/* WEEKLY EVENTS SECTION */}
       <div className="flex flex-row">
         <h2 className="font-semibold">Weekly Events</h2>
         <div className="ml-auto">
@@ -149,7 +149,7 @@ function Home() {
         </Flicking>
       </div>
 
-      {/* POPULAR EVENTS */}
+      {/* POPULAR EVENTS SECTION */}
       <div className="flex flex-row">
         <h2 className="font-semibold">Popular Events</h2>
         <div className="ml-auto">
