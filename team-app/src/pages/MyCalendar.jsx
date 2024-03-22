@@ -88,15 +88,16 @@ function MyCalendar() {
   
   
   const checkEventBooking = async (EventId) => {
-    const bookingsCollection = collection(firestore, 'Bookings');
-     // get which event has been booked by user personalised user
-    setIsEventBooked(false);
+    setIsEventBooked(false)
     if(!currentUser) {
       console.log('User not logged in or User UID is undefined.')
         return 
-    }//Exit if no user logged in. 
+    }//Exit if no user logged in    
 
     try{
+      const bookingsCollection = collection(firestore, 'Bookings');
+     // get which event has been booked by user personalised user
+
       const q = query(
         bookingsCollection, 
         where('EventId', '==', EventId), 
@@ -107,7 +108,15 @@ function MyCalendar() {
 
       if(!bookingsSnapshot.empty){
         setIsEventBooked(true)
-        setSelectedBooking(bookingsSnapshot.docs[0].data())
+        const selectedBookingData = bookingsSnapshot.docs[0].data()
+
+        setSelectedBooking(selectedBookingData)
+
+        const bookingId = bookingsSnapshot.docs[0].id
+        setSelectedBooking(prevState => ({...prevState, id:bookingId}))
+
+        //console.log("Retrieved Booking ID:", bookingsSnapshot.docs[0].id);
+        console.log("Retrieved Booking ID:", bookingId);
       }
     } catch (error) {
       console.error('Error checking event booking:',error)
@@ -130,6 +139,7 @@ function MyCalendar() {
 //open pop-up window
 const handleEventClick = (event) => {
   setSelectedEvent(event)
+  console.log("Selected Event ID:", event.id);
   checkEventBooking(event.id)
 };
 
@@ -152,10 +162,6 @@ const closeModal = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     };
   }, []);
-   
-
-  
-    
 
     return (
       <div>
@@ -178,10 +184,10 @@ const closeModal = () => {
               </span>
               <h3 className="event-title">{selectedEvent.title}</h3>
               <p className="event-details">{selectedEvent.location}</p>
-              {isEventBooked && selectedBooking ? (
+              {selectedEvent && isEventBooked && selectedBooking ? (
                 <div>
                   <p className="event-booked">Oh, looks like you have booked this event!</p>
-                  <a href={'/kv6002/booking/' + selectedBooking.id} className="visit-event-link">Visit Booking Page</a>
+                  <a href={`/kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
                 </div>
               ): (
                 <a href={'/kv6002/event/' + selectedEvent.id} className="visit-event-link">Visit Event Page</a>
