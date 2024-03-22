@@ -110,7 +110,7 @@ function Home() {
       <div className="flex flex-row">
         <h2 className="font-semibold">Weekly Events</h2>
         <div className="ml-auto">
-          <Link to={{pathname: '/events', query: {dateFilter: 'weekly'}}}>
+          <Link to='/events' state={{dateFilter: 'Hmq4PYJ29G5wY9lKhZgQ'}}>
             <SeeAllButton />
           </Link>
         </div>
@@ -148,7 +148,7 @@ function Home() {
       <div className="flex flex-row">
         <h2 className="font-semibold">Popular Events</h2>
         <div className="ml-auto">
-          <Link to={{pathname: '/events', query: {EventCategory: 'Popular'} }}>
+        <Link to='/events' state={{dateFilter: 'nBLKtVMoXJtvGqRwuIzT'}}>
             <SeeAllButton/>
           </Link>
         </div>

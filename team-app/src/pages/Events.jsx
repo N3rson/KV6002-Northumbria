@@ -3,6 +3,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
 import Select from '../components/Select'
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 /**
  * Events Page
@@ -19,7 +20,9 @@ function Events(props) {
     // const [events, setEvents] = useState([])
     const [categories, setCategories] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('')
-
+    //const { state } = props.location;
+    let location = useLocation();
+    
     useEffect(() => {
         //fetching events from the database
         const fetchEvents = async () => {
@@ -54,6 +57,9 @@ function Events(props) {
 
         fetchEvents()
         fetchCategories()
+
+        if(location.state)
+            setSelectedCategory(location.state.dateFilter);
     }, [])
 
     //Responsible for filtering the events by category
@@ -78,6 +84,7 @@ function Events(props) {
                         placeholder="All Events"
                         selectType={selectedCategory}
                         handleSelectType={handleSelectCategory}
+                        value={selectedCategory}
                     />
                 </div>
                 {filteredEvents.length === 0 ? (
