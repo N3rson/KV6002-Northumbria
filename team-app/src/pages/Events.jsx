@@ -14,8 +14,9 @@ import { Link } from 'react-router-dom';
 */
 
 
-function Events() {
-    const [events, setEvents] = useState([])
+
+function Events(props) {
+    // const [events, setEvents] = useState([])
     const [categories, setCategories] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('')
 
@@ -29,7 +30,8 @@ function Events() {
                     id: doc.id,
                     ...doc.data()
                 }))
-                setEvents(eventsData)
+                props.setEvents(eventsData);
+                props.setEventsFetched(true);
             } catch (error) {
                 console.error('Error fetching events: ', error)
             }
@@ -60,7 +62,7 @@ function Events() {
     }
     const selectedCategoryName = categories.find(category => category.id === selectedCategory)?.CategoryName;
     const filteredEvents = selectedCategoryName ?
-        events.filter(event => event.EventCategory === selectedCategoryName) : events;
+        props.events.filter(event => event.EventCategory === selectedCategoryName) : props.events;
 
     //JSX to display the events list appropriately and map each event to the correct category
     return (

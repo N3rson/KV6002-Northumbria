@@ -15,8 +15,12 @@ import Topbar from './components/Topbar';
 import { useLocation } from 'react-router-dom';
 import Notifications from './pages/Notifications';
 import WaitingList from './pages/WaitingList';
+import NotificationsUtil from './NotificationsUtil';
+import { Toaster, toast } from 'react-hot-toast';
 
 function App() {
+  const [events, setEvents] = useState([]);
+  const [eventsFetched, setEventsFetched] = useState(false)
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,14 +30,15 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         setCurrentUser(user);
+
       } else {
         setCurrentUser(null);
         navigate('/login');
       }
     });
 
-    return () => unsubscribe();
-  }, [navigate]);
+    return () => {unsubscribe();};
+  }, [navigate, events]);
 
   let pageNames = {
     '/': 'Home',
@@ -69,11 +74,13 @@ function App() {
         <div className="absolute -bottom-20 -right-20 -z-10 mix-blend-multiply w-96 h-96 blur-2xl bg-primary rounded-full"></div>
         <div className="absolute -bottom-40 -left-40 -z-10 mix-blend-multiply w-96 h-96 blur-2xl bg-primary rounded-full"></div>
       </div>
+      <NotificationsUtil events={events} setEvents={setEvents} eventsFetched={eventsFetched} setEventsFetched={setEventsFetched} toast={toast}/>
+      <Toaster/>
       <Topbar pageName={thisPageName} />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
+        <Route path="/events" element={<Events events={events} setEvents={setEvents} setEventsFetched={setEventsFetched}/>} />
         <Route path="/event/:eventId" element={<EventInfo />} />
         <Route path="/booking/:bookingId" element={<BookedEventInfo />} />
         <Route path="/booking/:bookingId/ticket/:ticketId/" element={<TicketInfo />} />
