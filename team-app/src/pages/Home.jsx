@@ -21,6 +21,7 @@ function Home() {
   const [bookings, setBookings] = useState([])
   const currentUser = auth.currentUser
 
+  // Fetch events and bookings from the database
   useEffect(() => {
     const fetchEvents = async () => {
         try {
@@ -39,7 +40,7 @@ function Home() {
 
     fetchEvents()
 
-    //Responsible for fetching the logged in user's booking data from the database
+    // Fetch the current user's booked event data
     const fetchBookings = async () => {
       try {
           const bookingsCollection = collection(firestore, 'Bookings')
@@ -56,7 +57,7 @@ function Home() {
       }
     }
 
-    //if the user is logged in then the bookings are fetched
+    // If user is logged in, fetch bookings
     if (currentUser) {
       fetchBookings()
     }
@@ -66,9 +67,11 @@ function Home() {
   const weeklyEvents = events.filter(event => event.EventCategory === 'Weekly');
   const popularEvents = events.filter(event => event.EventCategory === 'Popular');
 
+  // Return styling and data for 'My Booked Events', 'Weekly Events' and 'Popular Events'
   return (
-    <div className="p-4">
+    <div className="m-4">
       
+      {/* MY BOOKED EVENTS */}
       <div className="flex flex-row">
         <h2 className="font-semibold">My Booked Events</h2>
         <div className="ml-auto">
@@ -86,13 +89,13 @@ function Home() {
           }}>
 
           {bookings.length === 0 ? (
-              <h1 className='flex justify-center mt-2'>Oh, looks like you have no events booked this week!</h1>
+              <h1 className='ml-4 my-10'>Oh, looks like you have no events booked this week!</h1>
               ) : (
                 
                 bookings.map(booking => (
                   
                   <Link key={booking.id} to={'/booking/' + booking.id}>
-                    <div key={booking.id} className='backdrop-blur-sm w-96 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                    <div key={booking.id} className='backdrop-blur-sm w-80 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
                         <h2 className='pb-1 font-semibold text-colour1'>{booking.EventName}</h2>
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{booking.NumberOfTickets} Tickets</p>
@@ -107,6 +110,7 @@ function Home() {
         </Flicking>
       </div>
 
+      {/* WEEKLY EVENTS */}
       <div className="flex flex-row">
         <h2 className="font-semibold">Weekly Events</h2>
         <div className="ml-auto">
@@ -124,13 +128,13 @@ function Home() {
           }}>
 
           {weeklyEvents.length === 0 ? (
-              <h1 className='my-4'>Oh, looks like there's no events to show!</h1>
+              <h1 className='ml-4 my-10'>Oh, looks like there's no events to show!</h1>
               ) : (
                 
                 weeklyEvents.map(event => (
                   
                   <Link key={event.id} to={'/event/' + event.id}>
-                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                    <div key={event.id} className='backdrop-blur-sm w-80 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
                         <h2 className='pb-1 font-semibold text-colour1'>{event.EventName}</h2>
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
@@ -145,6 +149,7 @@ function Home() {
         </Flicking>
       </div>
 
+      {/* POPULAR EVENTS */}
       <div className="flex flex-row">
         <h2 className="font-semibold">Popular Events</h2>
         <div className="ml-auto">
@@ -162,13 +167,13 @@ function Home() {
           }}>
 
           {popularEvents.length === 0 ? (
-              <h1 className='flex justify-center mt-2'>No Events to show</h1>
+              <h1 className='ml-4 my-10'>Oh looks like there's no events to show!</h1>
               ) : (
                 
                 popularEvents.map(event => (
                   
                   <Link key={event.id} to={'/event/' + event.id}>
-                    <div key={event.id} className='backdrop-blur-sm w-96 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
+                    <div key={event.id} className='backdrop-blur-sm w-80 my-4 mx-2 p-3 shadow-middle bg-white/30 rounded-lg'>
                       <div className='flex flex-row'>
                         <h2 className='pb-1 font-semibold text-colour1'>{event.EventName}</h2>
                         <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>

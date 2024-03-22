@@ -25,10 +25,10 @@ function Notifications(){
 
     return (
         <div>
-            <div className="flex flex-col items-center gap-4 mx-5">
+            <div className="flex flex-col items-center gap-6 mx-6">
                     {notifications.map(notification => (
-                        <div key={notification.id} className='w-full bg-white rounded-lg p-4 border-black shadow-2xl shadow-middle'>
-                            <h2 className='font-bold'>{notification.title}</h2>
+                        <div key={notification.id} className='backdrop-blur-sm w-full p-3 shadow-middle bg-white/30 rounded-lg'>
+                            <h2 className='pb-1 font-semibold text-colour1'>{notification.title}</h2>
                             <p className='flex text-s'>{notification.message}</p>
                         </div>
                     ))}

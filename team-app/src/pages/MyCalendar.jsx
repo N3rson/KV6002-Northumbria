@@ -165,7 +165,7 @@ const closeModal = () => {
 
     return (
       <div>
-        <Calendar className="mx-3 shadow-middle bg-white/30 rounded-lg"
+        <Calendar className="mx-4 my-6 shadow-middle bg-white/30 rounded-lg"
           localizer={localizer}
           events = {CalendarEvents} 
           startAccessor="start"

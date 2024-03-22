@@ -210,7 +210,7 @@ function EventInfo() {
                                 <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
                                 {/*Enabling the waiting list button if the booking is full*/}
                                 {!isAlreadyInWaitingList && (
-                                    <button className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-xlg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
+                                    <button className="bg-colour1 hover:bg-bookHover text-white font-bold py-2 px-4 rounded-xlg xs:w-60 md:w-80 mb-20" onClick={() => handleWaitlistClick(selectedBookings)}>Join</button>
                                 )}
                                 {/*Disabling the waiting list button if the user is already in the waiting list*/}
                                 {isAlreadyInWaitingList && (

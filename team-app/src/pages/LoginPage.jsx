@@ -31,7 +31,7 @@ const LoginPage = () => {
           {loginMessage}
         </div>
       )}
-      <div className="p-8 bg-white shadow-middle rounded-xlg max-w-sm w-full">
+      <div className="m-4 p-8 bg-white shadow-middle rounded-xlg max-w-sm w-full">
         <h1 className="text-2xl font-bold text-center text-steelBlue mb-6">Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>

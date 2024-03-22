@@ -65,8 +65,8 @@ function Bookings() {
         )}
           {bookings.map(booking => (
             <Link key={booking.id} to={'/booking/' + booking.id}>  
-              <div className='flex justify-center'>
-                <div key={booking.id} className='backdrop-blur-sm w-96 m-10 p-3 shadow-middle bg-white/30 rounded-lg'>
+              <div className='flex justify-center m-6'>
+                <div key={booking.id} className='backdrop-blur-sm w-96 p-3 shadow-middle bg-white/30 rounded-lg'>
                   <div className='flex flex-row'>
                     <h2 className='pb-1 font-semibold text-colour1'>{booking.EventName}</h2>
                     <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{booking.NumberOfTickets} Tickets</p>

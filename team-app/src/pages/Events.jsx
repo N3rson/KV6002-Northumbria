@@ -92,15 +92,15 @@ function Events(props) {
                     ) : (
                         filteredEvents.map(event => (
                             <Link key={event.id} to={'/event/' + event.id}>
-                                <div className='flex justify-center'>
-                                    <div key={event.id} className='backdrop-blur-sm w-96 mt-10 p-3 shadow-middle bg-white/30 rounded-lg'>
+                                <div className='flex justify-center m-6'>
+                                    <div key={event.id} className='backdrop-blur-sm w-96 p-3 shadow-middle bg-white/30 rounded-lg'>
                                         <div className='flex flex-row'>
                                             <h2 className='pb-1 font-semibold text-colour1'>{event.EventName}</h2>
                                             <p className='ml-auto px-2 text-center rounded-xlg border-2 border-colour1'>{event.EventAttendance} / {event.EventLimit}</p>
                                         </div>
-                                        <p className=''>{event.EventCategory}</p>
-                                        <p className=''>{event.EventDate}, {event.EventTime}</p>
-                                        <p className=''>{event.EventLocation}</p>
+                                        <p>{event.EventCategory}</p>
+                                        <p>{event.EventDate}, {event.EventTime}</p>
+                                        <p>{event.EventLocation}</p>
                                     </div>
                                 </div>
                             </Link>
