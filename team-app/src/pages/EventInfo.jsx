@@ -200,13 +200,13 @@ function EventInfo() {
                         {/*Checking if the event is already booked and disabling the button*/}
                         {isAlreadyBooked && (
                             <>
-                                <button className='bg-gray-400 text-white font-bold mt-5 py-2 px-4 rounded-xlg w-60' disabled>You have a ticket!</button>
+                                <button className='bg-gray-400 text-white font-bold mt-5 py-2 px-4 rounded-xlg xs:w-60 md:w-80 ' disabled>You have a ticket!</button>
                             </>
                         )}
                         {/*Checking if the booking is full and disabling the button if it is*/}
                         {isBookButtonDisabled && !isAlreadyBooked && (
                             <>
-                                <button className='bg-gray-400 text-white font-bold mt-5 py-2 px-4 rounded-xlg w-60' disabled>Booking Full</button>
+                                <button className='bg-gray-400 text-white font-bold mt-5 py-2 px-4 rounded-xlg xs:w-60 md:w-80 ' disabled>Booking Full</button>
                                 <p className='text-sm mb-2 mt-4'>Wait for a spot to be reserved!</p>
                                 {/*Enabling the waiting list button if the booking is full*/}
                                 {!isAlreadyInWaitingList && (
