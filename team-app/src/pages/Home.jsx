@@ -89,7 +89,7 @@ function Home() {
           }}>
 
           {bookings.length === 0 ? (
-              <h1 className='ml-4 my-10'>Oh, looks like you have no events booked this week!</h1>
+              <h1 className='ml-4 my-10'>Oh, looks like you have no events booked!</h1>
               ) : (
                 
                 bookings.map(booking => (

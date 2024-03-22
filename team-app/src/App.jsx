@@ -17,6 +17,7 @@ import Notifications from './pages/Notifications';
 import WaitingList from './pages/WaitingList';
 import NotificationsUtil from './NotificationsUtil';
 import { Toaster, toast } from 'react-hot-toast';
+import AppStyling from './components/AppStyling';
 
 function App() {
   const [events, setEvents] = useState([]);
@@ -61,18 +62,7 @@ function App() {
 
   return (
     <div className="overflow-x-hidden relative text-black text-lg min-h-screen"> 
-      <div>
-        <div className="absolute -top-20 -left-40 -z-10 mix-blend-multiply w-96 h-96 blur-2xl bg-primary rounded-full"></div>
-        <div className="absolute -top-20 left-40 -z-10 mix-blend-multiply w-80 h-80 blur-2xl bg-secondary rounded-full"></div>
-        <div className="absolute top-40 -right-20 -z-10 mix-blend-multiply w-48 h-64 blur-2xl bg-secondary rounded-full"></div>
-        <div className="absolute top-20 left-20 -z-10 mix-blend-multiply w-48 h-64 blur-2xl bg-primary rounded-full"></div>
-
-        <div className="absolute top-40 -left-40 -z-10 mix-blend-multiply w-64 h-96 blur-2xl bg-secondary rounded-full"></div>
-        <div className="absolute bottom-40 -right-20 -z-10 mix-blend-multiply w-64 h-64 blur-2xl bg-secondary rounded-full"></div>
-
-        <div className="absolute -bottom-20 -right-20 -z-10 mix-blend-multiply w-96 h-96 blur-2xl bg-primary rounded-full"></div>
-        <div className="absolute -bottom-40 -left-40 -z-10 mix-blend-multiply w-96 h-96 blur-2xl bg-primary rounded-full"></div>
-      </div>
+      <AppStyling />
       <NotificationsUtil events={events} setEvents={setEvents} eventsFetched={eventsFetched} setEventsFetched={setEventsFetched} toast={toast}/>
       <Toaster/>
       <Topbar pageName={thisPageName} />
