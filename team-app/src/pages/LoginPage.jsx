@@ -12,25 +12,34 @@ import { useNavigate } from 'react-router-dom';
  * @author Navil Hassan
 */
 
-const LoginPage = (props) => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginMessage, setLoginMessage] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      signInWithEmailAndPassword(auth, email, password).then(()=>{
-      props.toast.success("Login Successful!");
+      await signInWithEmailAndPassword(auth, email, password);
+      setLoginMessage('Login successful!');
+      setTimeout(() => setLoginMessage(''), 3000); // Clear message after 3 seconds
       navigate('/');
-    });
+      setTimeout(() => setLoginMessage('successful'), 3000);
+      setTimeout(() => setLoginMessage(''), 3000);
     } catch (error) {
-      props.toast.error('Failed to log in. Please check your credentials.');
+      setLoginMessage('Failed to log in. Please check your credentials.');
+      setTimeout(() => setLoginMessage(''), 3000);
     }
   };
 
   return (
     <div className="relative min-h-screen flex justify-center items-center bg-primary">
+      {loginMessage && (
+        <div className="absolute top-0 right-0 m-4 bg-green-100 text-green-700 p-2 rounded">
+          {loginMessage}
+        </div>
+      )}
       <div className="m-4 p-8 bg-white shadow-middle rounded-xlg max-w-sm w-full">
         <h1 className="text-2xl font-bold text-center text-steelBlue mb-6">Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
