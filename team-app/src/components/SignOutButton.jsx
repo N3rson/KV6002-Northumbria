@@ -14,37 +14,43 @@ import SignOutIcon from '../assets/sign-out-icon.png';
 */
 
 
-const SignOutButton = () => {
+const SignOutButton = (props) => {
   const navigate = useNavigate();
-  const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [showFeedback, setShowFeedback] = useState(false);
+  // const [feedbackMessage, setFeedbackMessage] = useState('');
+  // const [showFeedback, setShowFeedback] = useState(false);
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
-      setFeedbackMessage('Successfully signed out.'); // Set a message
-      setShowFeedback(true); // Show message
-      setTimeout(() => {
-        setShowFeedback(false); // Hide message after 2 seconds
-        navigate('/login'); // Redirect to login page after showing message
-      }, 2000);
+      signOut(auth).then(()=>{
+        props.toast.success("Successfully signed out.");
+        navigate('/login');
+        // setTimeout(() => {
+        //   // setShowFeedback(false); // Hide message after 2 seconds
+        //   navigate('/login'); // Redirect to login page after showing message
+        // }, 2000);
+      });
+      
+      // setFeedbackMessage('Successfully signed out.'); // Set a message
+      // setShowFeedback(true); // Show message
+      
     } catch (error) {
       console.error('Error signing out: ', error);
-      setFeedbackMessage('Error signing out. Please try again.'); // Set error message
-      setShowFeedback(true);
-      setTimeout(() => {
-        setShowFeedback(false); // Hide message after 2 seconds
-      }, 2000);
+      props.toast.error("Error signing out. Please try again.");
+      // setFeedbackMessage('Error signing out. Please try again.'); // Set error message
+      // setShowFeedback(true);
+      // setTimeout(() => {
+      //   setShowFeedback(false); // Hide message after 2 seconds
+      // }, 2000);
     }
   };
 
   return (
     <div>
-      {showFeedback && (
+      {/* {showFeedback && (
         <div className="fixed top-4 right-4 bg-blue-500 text-white p-2 rounded-md">
           {feedbackMessage}
         </div>
-      )}
+      )} */}
       <button onClick={handleSignOut}>
         <img src={SignOutIcon} alt="Sign Out" className="h-6 w-6" />
       </button>

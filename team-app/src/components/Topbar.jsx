@@ -17,7 +17,7 @@ function Topbar(props){
                     </Link>
                 </div>
                 <div className='ml-4 flex justify-end'>
-                    <SignOutButton /> 
+                    <SignOutButton toast={props.toast} /> 
                 </div>
                 
             </div>

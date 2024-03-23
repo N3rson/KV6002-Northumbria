@@ -57,15 +57,15 @@ function App() {
   });
 
   if (!currentUser) {
-    return <LoginPage />;
+    return <LoginPage toast={toast}/>;
   }
 
   return (
     <div className="overflow-x-hidden relative text-black text-lg min-h-screen"> 
+      <Toaster/>
       <AppStyling />
       <NotificationsUtil events={events} setEvents={setEvents} eventsFetched={eventsFetched} setEventsFetched={setEventsFetched} toast={toast}/>
-      <Toaster/>
-      <Topbar pageName={thisPageName} />
+      <Topbar pageName={thisPageName} toast={toast}/>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
