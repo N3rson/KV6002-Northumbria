@@ -4,6 +4,7 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { collection, getDocs, updateDoc, query, where } from 'firebase/firestore'
 import { firestore, auth } from '../firebaseConfig'
+import { Link } from 'react-router-dom';
 import './MyCalendarStyle.css'
 import DownloadBtn from '../assets/icon_download.png'
 import CloseBtn from '../assets/icon_close.png'
@@ -188,16 +189,10 @@ const closeModal = () => {
               {selectedEvent && isEventBooked && selectedBooking ? (
                 <div>
                   <p className="event-booked">Oh, looks like you have booked this event!</p>
-                  <a href="/kv6002/bookings/" className="visit-event-link">Visit Bookings Page</a>
-                  {/* Original code however due to suspected authentication problems when hosting code was generalised
-                    <a href={`kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
-                  */}
+                  <Link to={'/booking/' + selectedBooking.id} className="visit-event-link">Visit Booking Page</Link>
                 </div>
               ): (
-                <a href="/kv6002/events/" className="visit-event-link">Visit Events Page</a>
-                /* Original code however due to suspected authentication problems when hosting code was generalised
-                  <a href={'kv6002/event/' + selectedEvent.id} className="visit-event-link">Visit Event Page</a>
-                */
+                <Link to={'/event/' + selectedEvent.id} className="visit-event-link">Visit Events Page</Link>
               )}
               
             </div>
