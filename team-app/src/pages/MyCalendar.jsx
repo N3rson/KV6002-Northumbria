@@ -39,18 +39,19 @@ function MyCalendar() {
         const eventsCollection = collection(firestore, 'Events')
         const eventsSnapshot = await getDocs(eventsCollection)
         const eventsData = []
-
+        
         eventsSnapshot.forEach((doc) => {
           //console.log('Event Data: ', doc.data()); issue resolved
-
+          
           // Parse EventDate and EventTime to create start date
-          const eventDateString = doc.data().EventDate;
-          const eventTimeString = doc.data().EventTime;
+            const eventDateString = doc.data().EventDate;
+            const eventTimeString = doc.data().EventTime;
 
-          const [month, day, year] = eventDateString.split('/');
-          const [hour, minute] = eventTimeString.split(':');
+            const [month, day, year] = eventDateString.split('/');
+            const [hour, minute] = eventTimeString.split(':');
 
-          const startDate = new Date(year, month - 1, day, hour, minute);
+            const startDate = new Date(year, month - 1, day, hour, minute);
+          
           
           //no longer need console.log issue has been resolved with above code
           //console.log('startDate:'), startDate;
@@ -187,10 +188,16 @@ const closeModal = () => {
               {selectedEvent && isEventBooked && selectedBooking ? (
                 <div>
                   <p className="event-booked">Oh, looks like you have booked this event!</p>
-                  <a href={`/kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
+                  <a href="/kv6002/bookings/" className="visit-event-link">Visit Bookings Page</a>
+                  {/* Original code however due to suspected authentication problems when hosting code was generalised
+                    <a href={`kv6002/booking/${selectedBooking.id}`} className="visit-event-link">Visit Booking Page</a>
+                  */}
                 </div>
               ): (
-                <a href={'/kv6002/event/' + selectedEvent.id} className="visit-event-link">Visit Event Page</a>
+                <a href="/kv6002/events/" className="visit-event-link">Visit Events Page</a>
+                /* Original code however due to suspected authentication problems when hosting code was generalised
+                  <a href={'kv6002/event/' + selectedEvent.id} className="visit-event-link">Visit Event Page</a>
+                */
               )}
               
             </div>
