@@ -57,7 +57,7 @@ function NotificationsUtil(props) {
       const interval = setInterval(() => {
         NotificationInterval();
         console.log("notification interval");
-      }, 36000000); //10 hours
+      }, 10000); //36000000); //10 hours
 
       return () => {
         clearInterval(interval);
