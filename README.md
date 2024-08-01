@@ -3,12 +3,17 @@ Event Management Team Project
 
 TEAM MEMBERS:
 
-Pawel Lasota 	w21003524
-Karol Fryc	w21030911
-Abigail Lobato	w20022537
-Navil Hassan	w19015723
-Lucie Stephenson w20010156
-Sayed Husain Kadhem	w20009388
+Pawel Lasota
+
+Karol Fryc
+
+Abigail Lobato
+
+Navil Hassan
+
+Lucie Stephenson
+
+Sayed Husain Kadhem
 
 GITHUB PROJECT LINK:
 
