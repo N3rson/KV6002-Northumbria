@@ -1,4 +1,4 @@
-# KV6002-Northumbria
+# Event Manager web app
 Event Management Team Project
 
 TEAM MEMBERS:
